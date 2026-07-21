@@ -64,7 +64,7 @@ const anio = new Date().getFullYear();
 
   <div class="contenedor pie__bottom">
     <span>© {anio} medianeras · Rafaela, Santa Fe</span>
-    <span>Sitio por Harvi Digital</span>
+    <span>Sitio por <a href="https://harvi.digital" rel="noopener" target="_blank" class="pie__harvi">Harvi Digital</a></span>
   </div>
 </footer>
 
@@ -92,8 +92,8 @@ const anio = new Date().getFullYear();
 
   /* object-fit: contain para que nunca se deforme, sin importar dimensiones reales */
   .pie__logo {
-    width: min(100%, 400px);
-    height: 200px;
+    width: min(100%, 220px);
+    height: 110px;
     object-fit: contain;
     object-position: left center;
     display: block;
@@ -177,6 +177,19 @@ const anio = new Date().getFullYear();
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-cream) 38%, transparent);
+  }
+
+  /* ── Barra inferior ──────────────────────────────────────────────────── */
+  .pie__harvi {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: color var(--transition-fast);
+  }
+  .pie__harvi:hover {
+    color: var(--color-cream);
   }
 
   /* ── Barra inferior ──────────────────────────────────────────────────── */

@@ -1,7 +1,6 @@
 ---
 // SectionQuienes.astro — R01. Quiénes somos.
 // Grilla 2 col: texto izquierda, Sofía destacada derecha. Claudia y Laura abajo.
-import Sticker from './Sticker.astro';
 import { mdToHtml } from '../lib/markdown';
 import type { Integrante, ConfigSitio } from '../lib/types';
 
@@ -29,8 +28,6 @@ function iniciales(nombre: string): string {
     <p class="eyebrow">Quiénes somos</p>
     <h2 id="quienes-titulo" class="label-seccion">Un espacio cultural en casa</h2>
 
-    <p class="quienes__subtitulo">Somos un espacio cultural de encuentros: un lugar para hablar de libros.</p>
-
     <!-- Grilla principal -->
     <div class="quienes__grid">
       <!-- Izquierda: texto del espacio + historia -->
@@ -42,6 +39,7 @@ function iniciales(nombre: string): string {
       <!-- Derecha: Sofía destacada -->
       {sofia && (
         <div class="persona-card sofia-card">
+          <img class="persona-card__sello" src="/brand/svg_elements/circle/book_lover.svg" alt="" aria-hidden="true" width="72" height="72" loading="lazy" />
           <div class="sofia-card__header">
             {sofia.foto ? (
               <img
@@ -65,26 +63,16 @@ function iniciales(nombre: string): string {
 
           <p class="sofia-card__bio">{sofia.bio}</p>
 
-          {sofia.instagram && (
-            <a
-              class="sofia-card__ig"
-              href={`https://instagram.com/${sofia.instagram.replace('@', '')}`}
-              rel="noopener"
-            >
-              {sofia.instagram}
-            </a>
-          )}
 
-          <div class="sofia-card__sticker" aria-hidden="true">
-            <Sticker
-              texto="SABERES QUE DIALOGAN"
-              size={88}
-              bg="transparent"
-              textoColor="var(--color-secondary)"
-            />
-          </div>
         </div>
       )}
+    </div>
+
+    <!-- Tagline como divisor visual -->
+    <div class="quienes__divisor-zona">
+      <div class="quienes__divisor">
+        <p class="quienes__frase">Somos un espacio cultural de encuentros: un lugar para hablar de libros.</p>
+      </div>
     </div>
 
     <!-- Equipo: Claudia y Laura -->
@@ -95,6 +83,7 @@ function iniciales(nombre: string): string {
           {docentes.map((p) => (
             <li>
               <div class="persona-card">
+                <img class="persona-card__sello" src="/brand/svg_elements/circle/book_lover.svg" alt="" aria-hidden="true" width="72" height="72" loading="lazy" />
                 <div class="persona">
                   <div class="persona__header">
                     {p.foto ? (
@@ -128,16 +117,19 @@ function iniciales(nombre: string): string {
 </section>
 
 <style>
-  /* ── Subtítulo centrado ──────────────────────────────────────────────────── */
-  .quienes__subtitulo {
-    font-size: var(--text-body-lg);
-    font-weight: 400;
-    font-style: italic;
-    color: var(--text-muted);
-    text-align: center;
-    max-width: 52ch;
-    margin: 0 auto var(--space-9);
-    line-height: 1.6;
+  /* ── Círculo decorativo: esquina superior izquierda de la sección ───────── */
+  .quienes {
+    position: relative;
+    overflow: clip;
+  }
+  .quienes__circulo {
+    position: absolute;
+    top: var(--space-6);
+    left: var(--space-6);
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+    animation: girar-sticker 22s linear infinite;
   }
 
   /* ── Grilla principal: texto | sofía ─────────────────────────────────────── */
@@ -146,7 +138,6 @@ function iniciales(nombre: string): string {
     grid-template-columns: 1fr 1fr;
     gap: var(--space-7);
     align-items: start;
-    margin-bottom: var(--space-9);
   }
 
   .quienes__columna-texto {
@@ -167,11 +158,25 @@ function iniciales(nombre: string): string {
   }
 
   /* ── Card base: borde fino + sombra suave ───────────────────────────────── */
+  .persona-card__sello {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    animation: girar-sello 20s linear infinite;
+    pointer-events: none;
+    width: 72px;
+    height: 72px;
+  }
+  @keyframes girar-sello {
+    to { transform: rotate(360deg); }
+  }
+
   .persona-card {
     background: var(--color-cream);
     border: 1px solid color-mix(in srgb, var(--color-secondary) 35%, transparent);
     border-radius: var(--radius-card);
     box-shadow: 0 1px 4px rgba(41, 72, 76, 0.06), 0 4px 18px rgba(41, 72, 76, 0.08);
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
@@ -185,7 +190,7 @@ function iniciales(nombre: string): string {
   /* ── Tarjeta Sofía: variante destacada ───────────────────────────────────── */
   .sofia-card {
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     padding: var(--space-7);
     gap: var(--space-5);
   }
@@ -256,17 +261,49 @@ function iniciales(nombre: string): string {
     border-color: var(--color-secondary);
   }
 
-  .sofia-card__sticker {
-    position: absolute;
-    bottom: -8px;
-    right: -8px;
-    opacity: 0.45;
+  @keyframes girar-sticker {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Tagline como divisor con líneas decorativas ─────────────────────────── */
+  .quienes__divisor-zona {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-block: var(--space-7);
+  }
+  .quienes__divisor {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+  .quienes__divisor::before,
+  .quienes__divisor::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, var(--color-secondary) 28%, transparent);
+  }
+  .quienes__frase {
+    font-size: var(--text-body-lg);
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 48ch;
+    line-height: 1.6;
+    flex-shrink: 0;
+  }
+  .quienes__divisor-circulo {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    animation: girar-sticker 22s linear infinite;
   }
 
   /* ── Docentes (Claudia y Laura) ──────────────────────────────────────────── */
   .quienes__docentes {
-    border-top: 1px solid color-mix(in srgb, var(--color-secondary) 25%, transparent);
-    padding-top: var(--space-7);
+    padding-top: 0;
   }
   .quienes__sub-label {
     margin-bottom: var(--space-5);
@@ -349,8 +386,13 @@ function iniciales(nombre: string): string {
     .quienes__grid {
       grid-template-columns: 1fr;
     }
-    .sofia-card__sticker {
-      opacity: 0.35;
+    .quienes__circulo {
+      width: 80px;
+      height: 80px;
+    }
+    .quienes__frase {
+      font-size: var(--text-body);
+      max-width: 36ch;
     }
   }
 </style>

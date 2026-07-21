@@ -1,45 +1,69 @@
 ---
-// SectionHero.astro — frase de marca + tagline "Pensar más allá" + CTA.
-// Lettering: título con mezcla de peso + resaltado marcador sobre palabra clave.
-import Sticker from './Sticker.astro';
-import FloralIcon from './FloralIcon.astro';
+// SectionHero.astro — fullscreen. Navbar fixed transparente encima.
+// Logo centrado en columna derecha. Círculo girando arriba.
 ---
 <section class="hero" aria-labelledby="hero-titulo">
   <div class="contenedor hero__inner">
+
+    <!-- Columna izquierda: texto + CTA -->
     <div class="hero__texto">
-      <p class="eyebrow">Espacio cultural · lectura · escritura · pensamiento</p>
+      <p class="eyebrow">Lectura · escritura · pensamiento</p>
       <h1 id="hero-titulo" class="titulo-mix hero__titulo">
         Entre páginas también <strong>florecen</strong> <span class="marca">encuentros</span>.
       </h1>
       <p class="hero__tagline">Leemos juntos para no sentirnos solos.</p>
-      <p class="hero__lead">
-        Talleres, encuentros y conversaciones. El conocimiento no se transmite: se construye en diálogo.
-      </p>
+
       <div class="hero__cta">
-        <a class="boton" href="#propuestas">Conocé las propuestas</a>
+        <a class="boton" href="#propuestas">Próximas propuestas</a>
         <a class="boton boton--secundario" href="#quienes">Quiénes somos</a>
       </div>
     </div>
 
+    <!-- Columna derecha: logo centrado + círculo flotando -->
     <div class="hero__deco" aria-hidden="true">
-      <Sticker texto="UN LUGAR PARA HABLAR DE LIBROS" size={132} />
-      <span class="hero__flor hero__flor--1"><FloralIcon variante="flor" color="var(--color-yellow)" size={72} /></span>
-      <span class="hero__flor hero__flor--2"><FloralIcon variante="hoja" color="var(--color-secondary)" size={64} /></span>
-      <span class="hero__flor hero__flor--3"><FloralIcon variante="margarita" color="var(--color-olive)" size={56} /></span>
+      <img
+        class="hero__logo"
+        src="/brand/logo-color.png"
+        alt=""
+        loading="eager"
+      />
+      <img
+        class="hero__circulo"
+        src="/brand/svg_elements/circle/amamos_leer.svg"
+        alt=""
+        width="100"
+        height="100"
+        loading="eager"
+      />
     </div>
+
   </div>
 </section>
 
 <style>
   .hero {
-    padding-block: var(--space-9) var(--section-py);
-  }
-  .hero__inner {
-    display: grid;
-    grid-template-columns: 1.3fr 0.7fr;
-    gap: var(--space-7);
+    min-height: 100svh;
+    padding-top: calc(64px + var(--space-8));
+    padding-bottom: var(--section-py);
+    display: flex;
     align-items: center;
   }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-9);
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .hero__texto {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* ── Columna izquierda ───────────────────────────────────────────── */
   .hero__titulo {
     font-size: var(--text-display);
     margin: var(--space-4) 0 var(--space-3);
@@ -63,36 +87,65 @@ import FloralIcon from './FloralIcon.astro';
     gap: var(--space-4);
     flex-wrap: wrap;
   }
+  .hero__ver-todas {
+    display: inline-block;
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .hero__ver-todas:hover {
+    color: var(--color-primary);
+  }
 
+  /* ── Columna derecha: logo centrado + círculo ────────────────────── */
   .hero__deco {
     position: relative;
-    height: 100%;
-    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
   }
-  .hero__deco > :global(.sticker) {
+
+  .hero__logo {
+    display: block;
+    width: min(100%, 300px);
+    height: auto;
+    object-fit: contain;
+  }
+
+  .hero__circulo {
     position: absolute;
     top: 0;
     right: 0;
+    width: 100px;
+    height: 100px;
+    animation: girar-hero 24s linear infinite;
   }
-  .hero__flor {
-    position: absolute;
-  }
-  .hero__flor--1 { bottom: 12%; left: 6%; }
-  .hero__flor--2 { top: 18%; left: 30%; }
-  .hero__flor--3 { bottom: 28%; right: 8%; }
 
+  @keyframes girar-hero {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Mobile ───────────────────────────────────────────────────────── */
   @media (max-width: 768px) {
     .hero__inner {
       grid-template-columns: 1fr;
     }
     .hero__deco {
-      min-height: 180px;
+      min-height: 160px;
       order: -1;
     }
-    .hero__deco > :global(.sticker) {
-      position: relative;
-      margin-inline: auto;
+    .hero__logo {
+      width: min(100%, 200px);
     }
-    .hero__flor { display: none; }
+    .hero__circulo {
+      width: 72px;
+      height: 72px;
+      top: 0;
+      right: 0;
+    }
   }
 </style>

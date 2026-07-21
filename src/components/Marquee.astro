@@ -1,0 +1,53 @@
+---
+interface Props {
+  frase?: string;
+}
+
+const FRASES = [
+  'Un lugar para hablar de libros',
+  'Las medianeras no son límites, son fronteras compartidas',
+  'Las medianeras no separan, sostienen lo que florece',
+  'Los libros están para ser leídos y conversados',
+  'Los saberes que dialogan, construyen sentidos',
+];
+
+const { frase } = Astro.props;
+const elegida = frase ?? FRASES[Math.floor(Math.random() * FRASES.length)]!;
+const sep = '  ·  ';
+const linea = Array(6).fill(elegida).join(sep) + sep;
+---
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__pista">
+    <span>{linea}</span>
+    <span>{linea}</span>
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    background: #EAB82B;
+    background: var(--color-yellow, #EAB82B);
+    padding-block: 6px;
+  }
+  .marquee__pista {
+    display: flex;
+    width: max-content;
+    animation: marquee-correr 80s linear infinite;
+  }
+  .marquee__pista span {
+    white-space: nowrap;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+  @keyframes marquee-correr {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__pista { animation: none; }
+  }
+</style>

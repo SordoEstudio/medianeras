@@ -1,18 +1,24 @@
 ---
 // Navbar.astro — fija, anclas a secciones, hamburguesa en mobile.
+// Transparente en la carga (el hero muestra el logo). Opaca al hacer scroll.
 import Logo from './Logo.astro';
 import { UI } from '../content/ui';
 
+const esInicio = Astro.url.pathname === '/';
+const base = esInicio ? '' : '/';
+
 const links = [
-  { href: '#quienes', label: UI.nav.quienes },
-  { href: '#que-hacemos', label: UI.nav.queHacemos },
-  { href: '#propuestas', label: UI.nav.oferta },
-  { href: '#contacto', label: UI.nav.contacto },
+  { href: `${base}#quienes`,     label: UI.nav.quienes },
+  { href: `${base}#que-hacemos`, label: UI.nav.queHacemos },
+  { href: '/propuestas',         label: UI.nav.oferta },
+  { href: `${base}#contacto`,    label: UI.nav.contacto },
 ];
 ---
-<header class="nav" id="inicio">
+<header class="nav" id="inicio" data-scrolled={!esInicio ? '' : undefined}>
   <div class="contenedor nav__inner">
-    <Logo variante="wordmark" />
+    <div class="nav__logo-wrap">
+      <Logo variante="wordmark" href="/" />
+    </div>
 
     <button
       class="nav__burger"
@@ -34,15 +40,27 @@ const links = [
 </header>
 
 <script>
+  const nav    = document.querySelector<HTMLElement>('.nav');
   const burger = document.querySelector<HTMLButtonElement>('.nav__burger');
-  const menu = document.querySelector<HTMLElement>('#nav-menu');
+  const menu   = document.querySelector<HTMLElement>('#nav-menu');
+  const hero   = document.querySelector<HTMLElement>('.hero');
+
+  // ── Scroll: solo en inicio, transparente → opaco ─────────────────────
+  if (window.location.pathname === '/') {
+    function actualizarNav() {
+      nav?.toggleAttribute('data-scrolled', window.scrollY > 8);
+    }
+    actualizarNav();
+    window.addEventListener('scroll', actualizarNav, { passive: true });
+  }
+
+  // ── Menú mobile ──────────────────────────────────────────────────────
   burger?.addEventListener('click', () => {
     const abierto = burger.getAttribute('aria-expanded') === 'true';
     burger.setAttribute('aria-expanded', String(!abierto));
     burger.setAttribute('aria-label', abierto ? 'Abrir menú' : 'Cerrar menú');
     menu?.classList.toggle('nav__menu--abierto', !abierto);
   });
-  // Cerrar al clickear un link (mobile).
   menu?.querySelectorAll('a').forEach((a) =>
     a.addEventListener('click', () => {
       burger?.setAttribute('aria-expanded', 'false');
@@ -52,20 +70,42 @@ const links = [
 </script>
 
 <style>
+  /* ── Estado base: transparente (sobre hero) ─────────────────────────── */
   .nav {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
-    background: color-mix(in srgb, var(--color-cream) 92%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 30%, transparent);
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition:
+      background 0.35s ease,
+      border-color 0.35s ease;
   }
+
+  /* ── Estado scrolled: opaco ─────────────────────────────────────────── */
+  .nav[data-scrolled] {
+    background: var(--color-cream);
+    border-bottom-color: color-mix(in srgb, var(--color-secondary) 30%, transparent);
+  }
+
+  /* ── Logo: oculto sobre hero, visible al scrollear ──────────────────── */
+  .nav__logo-wrap {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .nav[data-scrolled] .nav__logo-wrap {
+    opacity: 1;
+  }
+
   .nav__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-height: 64px;
   }
+
   .nav__menu ul {
     display: flex;
     gap: var(--space-6);
@@ -79,11 +119,11 @@ const links = [
     font-weight: 600;
     color: var(--text-main);
     padding: var(--space-2) 0;
-    border-bottom: 2px solid transparent;
-    transition: border-color var(--transition-base);
+    transition: color var(--transition-base);
   }
-  .nav__menu a:hover {
-    border-color: var(--color-red);
+  /* Sobre el hero (no scrolled): links en blanco para contraste */
+  .nav:not([data-scrolled]) .nav__menu a {
+    color: var(--color-primary);
   }
 
   .nav__burger {
@@ -105,20 +145,12 @@ const links = [
     border-radius: 2px;
     transition: transform var(--transition-base), opacity var(--transition-base);
   }
-  .nav__burger[aria-expanded='true'] span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
-  }
-  .nav__burger[aria-expanded='true'] span:nth-child(2) {
-    opacity: 0;
-  }
-  .nav__burger[aria-expanded='true'] span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
-  }
+  .nav__burger[aria-expanded='true'] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav__burger[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+  .nav__burger[aria-expanded='true'] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
   @media (max-width: 768px) {
-    .nav__burger {
-      display: flex;
-    }
+    .nav__burger { display: flex; }
     .nav__menu {
       position: absolute;
       top: 64px;
@@ -130,9 +162,7 @@ const links = [
       overflow: hidden;
       transition: max-height var(--transition-base);
     }
-    .nav__menu--abierto {
-      max-height: 320px;
-    }
+    .nav__menu--abierto { max-height: 320px; }
     .nav__menu ul {
       flex-direction: column;
       gap: 0;
@@ -144,6 +174,10 @@ const links = [
     .nav__menu a {
       display: block;
       padding: var(--space-4) 0;
+      color: var(--text-main) !important;
     }
+    /* En mobile siempre mostrar logo (el hero puede estar oculto/arriba) */
+    .nav__logo-wrap { opacity: 1; }
+    .nav { background: var(--color-cream); border-bottom-color: color-mix(in srgb, var(--color-secondary) 30%, transparent); }
   }
 </style>

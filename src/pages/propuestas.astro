@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import SectionOferta from '../components/SectionOferta.astro';
+import Footer from '../components/Footer.astro';
+import { getActividades, getConfig } from '../lib/cms';
+
+const [actividades, config] = await Promise.all([getActividades(), getConfig()]);
+---
+<Layout title="Todas las propuestas — medianeras · espacio cultural">
+  <Navbar />
+  <main class="pagina-propuestas">
+    <SectionOferta actividades={actividades} conBusqueda={true} titulo="Conocé nuestras propuestas" />
+  </main>
+  <Footer config={config} />
+</Layout>
+
+<style>
+  .pagina-propuestas {
+    padding-top: 64px;
+  }
+  .pagina-propuestas :global(.oferta) {
+    padding-top: var(--space-7);
+  }
+</style>

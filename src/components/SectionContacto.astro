@@ -38,23 +38,35 @@ const igUser     = config.instagram.replace('@', '');
         <ul class="contacto__datos">
           <li class="dato">
             <span class="dato__label">visitanos</span>
-            <a class="dato__link" href={comoLlegar} rel="noopener" target="_blank">
-              {config.direccion}
-            </a>
+            <div class="dato__valor">
+              <img src="/brand/svg_elements/path3283.svg" class="dato__svg" alt="" loading="lazy" />
+              <a class="dato__link" href={comoLlegar} rel="noopener" target="_blank">
+                {config.direccion}
+              </a>
+            </div>
           </li>
           <li class="dato">
             <span class="dato__label">escribinos</span>
-            <a class="dato__link" href={`mailto:${config.emailContacto}`}>{config.emailContacto}</a>
+            <div class="dato__valor">
+              <img src="/brand/svg_elements/path3267.svg" class="dato__svg" alt="" loading="lazy" />
+              <a class="dato__link" href={`mailto:${config.emailContacto}`}>{config.emailContacto}</a>
+            </div>
           </li>
           {config.whatsapp && (
             <li class="dato">
               <span class="dato__label">whatsapp</span>
-              <a class="dato__link" href={`https://wa.me/${config.whatsapp}`} rel="noopener">Escribinos por WhatsApp</a>
+              <div class="dato__valor">
+                <img src="/brand/svg_elements/path3261.svg" class="dato__svg" alt="" loading="lazy" />
+                <a class="dato__link" href={`https://wa.me/${config.whatsapp}`} rel="noopener">Escribinos por WhatsApp</a>
+              </div>
             </li>
           )}
           <li class="dato">
             <span class="dato__label">seguinos</span>
-            <a class="dato__link" href={`https://instagram.com/${igUser}`} rel="noopener">{config.instagram}</a>
+            <div class="dato__valor">
+              <img src="/brand/svg_elements/path3285.svg" class="dato__svg" alt="" loading="lazy" />
+              <a class="dato__link" href={`https://instagram.com/${igUser}`} rel="noopener">{config.instagram}</a>
+            </div>
           </li>
         </ul>
       </div>
@@ -112,7 +124,18 @@ const igUser     = config.instagram.replace('@', '');
   .dato {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
+  }
+  .dato__valor {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .dato__svg {
+    flex-shrink: 0;
+    width: auto;
+    height: 1.1em;
+    opacity: 0.85;
   }
   .dato__label {
     font-size: 0.65rem;

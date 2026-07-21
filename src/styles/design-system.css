@@ -62,7 +62,7 @@ h3.label-seccion {
 
 /* Títulos de sección centrados. */
 .seccion .eyebrow {
-  text-align: center;
+  display: none;
 }
 .seccion h2.label-seccion,
 .seccion h3.label-seccion {
@@ -186,10 +186,10 @@ h3.label-seccion {
 
 /* ── Links: sin subrayado base, underline artístico en hover ─────────────────
    Excluye botones y chips que tienen su propio estado hover. */
-a:not(.boton):not(.chip) {
+a:not(.boton):not(.chip):not(.logo):not(.logo-icono) {
   text-decoration: none;
 }
-a:not(.boton):not(.chip):hover {
+a:not(.boton):not(.chip):not(.logo):not(.logo-icono):hover {
   text-decoration: underline;
   text-decoration-color: var(--color-yellow);
   text-decoration-thickness: 3px;
@@ -208,6 +208,7 @@ a:not(.boton):not(.chip):hover {
 .seccion--oscura {
   background: var(--bg-dark);
   color: var(--text-on-dark);
+  border-bottom: 5px solid var(--color-yellow);
 }
 .seccion--oscura .titulo-mix,
 .seccion--oscura .label-seccion {

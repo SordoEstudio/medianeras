@@ -1,54 +1,158 @@
 ---
-// SectionOferta.astro — foco comercial (R03). Filtro por categoría + grilla + modal.
-// Filtrado client-side por data-categoria. Modal de inscripción vía Astro Action.
+// SectionOferta.astro — foco comercial (R03). Filtros multi-dimensión + grilla + modal.
 import ActividadCard from './ActividadCard.astro';
 import ModalInscripcion from './ModalInscripcion.astro';
 import { UI } from '../content/ui';
-import type { Actividad, Categoria } from '../lib/types';
+import type { Actividad, Categoria, Audiencia } from '../lib/types';
 
 interface Props {
   actividades: Actividad[];
+  limite?: number;
+  conBusqueda?: boolean;
+  conFiltros?: boolean;
+  titulo?: string;
 }
-const { actividades } = Astro.props;
+const { actividades, limite, conBusqueda = false, conFiltros = true, titulo } = Astro.props;
 
-// Orden: destacadas primero, luego por fecha de publicación desc.
-const ordenadas = [...actividades].sort((a, b) => {
-  if (a.destacada !== b.destacada) return a.destacada ? -1 : 1;
-  return b.publishedAt.localeCompare(a.publishedAt);
-});
+function fechaProxima(a: Actividad): string {
+  return [...a.fechas].map((f) => f.fecha).sort()[0] ?? '9999-12-31';
+}
 
-// Solo mostrar chips de categorías con al menos una actividad
+// En home (limite): próximas por fecha. En página completa: destacadas primero.
+const ordenadas = limite
+  ? [...actividades]
+      .sort((a, b) => fechaProxima(a).localeCompare(fechaProxima(b)))
+      .slice(0, limite)
+  : [...actividades].sort((a, b) => {
+      if (a.destacada !== b.destacada) return a.destacada ? -1 : 1;
+      return b.publishedAt.localeCompare(a.publishedAt);
+    });
+
+// Chips de categoría — solo las presentes
 const categoriasPresentes = [...new Set(actividades.map((a) => a.categoria))] as Categoria[];
-const ORDEN: Categoria[] = ['taller', 'encuentro', 'club-lectura', 'capacitacion', 'contenido-gratuito'];
-const FILTROS: { value: Categoria | 'todas'; label: string }[] = [
+const ORDEN_CAT: Categoria[] = ['taller', 'encuentro', 'club-lectura', 'capacitacion', 'contenido-gratuito'];
+const FILTROS_CAT = [
   { value: 'todas', label: UI.filtros.todas },
-  ...ORDEN
+  ...ORDEN_CAT
     .filter((c) => categoriasPresentes.includes(c))
     .map((c) => ({ value: c, label: UI.filtros[c] })),
 ];
+
+// Chips de audiencia — solo las presentes
+const audienciasPresentes = [...new Set(actividades.map((a) => a.audiencia ?? 'adultos'))] as Audiencia[];
+const ORDEN_AUD: Audiencia[] = ['niños', 'juvenil', 'adultos'];
+const FILTROS_AUD = audienciasPresentes.length > 1
+  ? [
+      { value: 'todas', label: UI.filtrosAudiencia.todas },
+      ...ORDEN_AUD
+        .filter((a) => audienciasPresentes.includes(a))
+        .map((a) => ({ value: a, label: UI.filtrosAudiencia[a] })),
+    ]
+  : [];
+
 ---
 <section class="seccion oferta" id="propuestas" aria-labelledby="oferta-titulo">
   <div class="contenedor">
-    <p class="eyebrow">Qué ofrecemos</p>
-    <h2 id="oferta-titulo" class="label-seccion">Propuestas</h2>
+    {!titulo && <p class="eyebrow">Qué ofrecemos</p>}
+    <h2 id="oferta-titulo" class="label-seccion">{titulo ?? 'Propuestas'}</h2>
 
-    <div class="oferta__filtros" role="group" aria-label="Filtrar por categoría">
-      {FILTROS.map((f, i) => (
-        <button class="chip" data-filtro={f.value} aria-pressed={i === 0 ? 'true' : 'false'}>
-          {f.label}
-        </button>
-      ))}
-    </div>
+    {(conBusqueda || conFiltros) && (
+      <div class="oferta__controles">
+        {conFiltros && (
+          <div class="oferta__filtros-barra">
+
+            <!-- Dropdown: Categoría -->
+            <div class="of-drop" data-drop="cat">
+              <button class="of-drop__btn" type="button" aria-expanded="false" aria-haspopup="listbox">
+                <span class="of-drop__label">Categoría</span>
+                <span class="of-drop__valor">{FILTROS_CAT[0]?.label}</span>
+                <svg class="of-drop__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+                  <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <ul class="of-drop__menu" role="listbox" aria-label="Categoría">
+                {FILTROS_CAT.map((f, i) => (
+                  <li class={`of-drop__op${i === 0 ? ' of-drop__op--sel' : ''}`} role="option" data-value={f.value} aria-selected={i === 0 ? 'true' : 'false'}>
+                    {f.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <!-- Dropdown: Audiencia -->
+            {FILTROS_AUD.length > 1 && (
+              <div class="of-drop" data-drop="aud">
+                <button class="of-drop__btn" type="button" aria-expanded="false" aria-haspopup="listbox">
+                  <span class="of-drop__label">Edad</span>
+                  <span class="of-drop__valor">{FILTROS_AUD[0]?.label}</span>
+                  <svg class="of-drop__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+                    <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <ul class="of-drop__menu" role="listbox" aria-label="Edad">
+                  {FILTROS_AUD.map((f, i) => (
+                    <li class={`of-drop__op${i === 0 ? ' of-drop__op--sel' : ''}`} role="option" data-value={f.value} aria-selected={i === 0 ? 'true' : 'false'}>
+                      {f.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <!-- Dropdown: Costo -->
+            <div class="of-drop" data-drop="costo">
+              <button class="of-drop__btn" type="button" aria-expanded="false" aria-haspopup="listbox">
+                <span class="of-drop__label">Costo</span>
+                <span class="of-drop__valor">{Object.values(UI.filtrosCosto)[0]}</span>
+                <svg class="of-drop__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+                  <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <ul class="of-drop__menu" role="listbox" aria-label="Costo">
+                {Object.entries(UI.filtrosCosto).map(([val, label], i) => (
+                  <li class={`of-drop__op${i === 0 ? ' of-drop__op--sel' : ''}`} role="option" data-value={val} aria-selected={i === 0 ? 'true' : 'false'}>
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        )}
+        {conBusqueda && (
+          <input
+            type="search"
+            id="oferta-search"
+            class="oferta__search-input"
+            placeholder="Buscar…"
+            aria-label="Buscar propuestas"
+          />
+        )}
+      </div>
+    )}
 
     <ul class="oferta__grid" id="oferta-grid">
       {ordenadas.map((a) => (
-        <li data-categoria={a.categoria}>
+        <li
+          data-categoria={a.categoria}
+          data-audiencia={a.audiencia ?? 'adultos'}
+          data-precio={!a.precio ? 'gratuito' : 'pago'}
+          data-fecha-proxima={fechaProxima(a)}
+          data-titulo={a.nombre.toLowerCase()}
+          data-descripcion={a.descripcion.toLowerCase()}
+        >
           <ActividadCard actividad={a} />
         </li>
       ))}
     </ul>
 
     <p class="oferta__vacio" id="oferta-vacio" hidden></p>
+
+    {limite && (
+      <div class="oferta__ver-todas">
+        <a class="boton boton--secundario" href="/propuestas">Ver todas las propuestas</a>
+      </div>
+    )}
   </div>
 </section>
 
@@ -58,9 +162,13 @@ const FILTROS: { value: Categoria | 'todas'; label: string }[] = [
   import { actions } from 'astro:actions';
   import { UI } from '../content/ui';
 
-  // ── Filtro de categoría ──────────────────────────────────────────────
-  const chips = document.querySelectorAll<HTMLButtonElement>('.chip[data-filtro]');
-  const items = document.querySelectorAll<HTMLLIElement>('#oferta-grid > li');
+  // ── Estado de filtros ────────────────────────────────────────────────
+  let activeCat = 'todas';
+  let activeAud = 'todas';
+  let activeCosto = 'todos';
+  let activeBusqueda = '';
+
+  const items = () => Array.from(document.querySelectorAll<HTMLLIElement>('#oferta-grid > li'));
   const vacio = document.querySelector<HTMLElement>('#oferta-vacio');
   const LABELS: Record<string, string> = {
     taller: 'talleres',
@@ -70,36 +178,89 @@ const FILTROS: { value: Categoria | 'todas'; label: string }[] = [
     'contenido-gratuito': 'contenido gratuito',
   };
 
-  chips.forEach((chip) =>
-    chip.addEventListener('click', () => {
-      const cat = chip.dataset.filtro!;
-      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
-      let visibles = 0;
-      items.forEach((li) => {
-        const ok = cat === 'todas' || li.dataset.categoria === cat;
-        li.hidden = !ok;
-        if (ok) visibles++;
-      });
-      if (vacio) {
-        if (visibles === 0) {
-          vacio.textContent = UI.empty.sinActividades(LABELS[cat] ?? 'propuestas');
-          vacio.hidden = false;
-        } else {
-          vacio.hidden = true;
-        }
+  function aplicarFiltros() {
+    let visibles = 0;
+    items().forEach((li) => {
+      const okCat      = activeCat      === 'todas' || li.dataset.categoria === activeCat;
+      const okAud      = activeAud      === 'todas' || li.dataset.audiencia === activeAud;
+      const okCosto    = activeCosto    === 'todos' || li.dataset.precio    === activeCosto;
+      const okBusqueda = !activeBusqueda ||
+        li.dataset.titulo?.includes(activeBusqueda) ||
+        li.dataset.descripcion?.includes(activeBusqueda);
+      const ok = okCat && okAud && okCosto && okBusqueda;
+      li.hidden = !ok;
+      if (ok) visibles++;
+    });
+    if (vacio) {
+      vacio.hidden = visibles > 0;
+      if (visibles === 0) {
+        const label = activeCat !== 'todas' ? LABELS[activeCat] ?? 'propuestas' : 'propuestas';
+        vacio.textContent = UI.empty.sinActividades(label);
       }
-    }),
-  );
+    }
+  }
+
+  // ── Búsqueda ─────────────────────────────────────────────────────────
+  const searchInput = document.querySelector<HTMLInputElement>('#oferta-search');
+  searchInput?.addEventListener('input', () => {
+    activeBusqueda = (searchInput.value ?? '').toLowerCase().trim();
+    aplicarFiltros();
+  });
+
+  // ── Dropdowns custom ─────────────────────────────────────────────────
+  function cerrarTodos() {
+    document.querySelectorAll<HTMLButtonElement>('.of-drop__btn').forEach((b) =>
+      b.setAttribute('aria-expanded', 'false')
+    );
+  }
+
+  function setupDrop(drop: HTMLElement, onChange: (val: string) => void) {
+    const btn   = drop.querySelector<HTMLButtonElement>('.of-drop__btn')!;
+    const label = drop.querySelector<HTMLElement>('.of-drop__valor')!;
+    const ops   = Array.from(drop.querySelectorAll<HTMLElement>('.of-drop__op'));
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const abierto = btn.getAttribute('aria-expanded') === 'true';
+      cerrarTodos();
+      btn.setAttribute('aria-expanded', String(!abierto));
+    });
+
+    ops.forEach((op) => {
+      op.addEventListener('click', () => {
+        const val = op.dataset.value ?? '';
+        ops.forEach((o) => {
+          o.classList.toggle('of-drop__op--sel', o === op);
+          o.setAttribute('aria-selected', String(o === op));
+        });
+        label.textContent = op.textContent?.trim() ?? '';
+        btn.classList.toggle('of-drop__btn--activo', op !== ops[0]);
+        cerrarTodos();
+        onChange(val);
+      });
+    });
+  }
+
+  document.addEventListener('click', cerrarTodos);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarTodos(); });
+
+  const dropCat   = document.querySelector<HTMLElement>('.of-drop[data-drop="cat"]');
+  const dropAud   = document.querySelector<HTMLElement>('.of-drop[data-drop="aud"]');
+  const dropCosto = document.querySelector<HTMLElement>('.of-drop[data-drop="costo"]');
+
+  if (dropCat)   setupDrop(dropCat,   (v) => { activeCat   = v; aplicarFiltros(); });
+  if (dropAud)   setupDrop(dropAud,   (v) => { activeAud   = v; aplicarFiltros(); });
+  if (dropCosto) setupDrop(dropCosto, (v) => { activeCosto = v; aplicarFiltros(); });
 
   // ── Modal de inscripción ─────────────────────────────────────────────
-  const modal = document.querySelector<HTMLDialogElement>('#modal-inscripcion');
-  const form = document.querySelector<HTMLFormElement>('#form-inscripcion');
+  const modal     = document.querySelector<HTMLDialogElement>('#modal-inscripcion');
+  const form      = document.querySelector<HTMLFormElement>('#form-inscripcion');
   const panelForm = modal?.querySelector<HTMLElement>('[data-estado="form"]');
-  const panelSuccess = modal?.querySelector<HTMLElement>('[data-estado="success"]');
-  const titulo = document.querySelector<HTMLElement>('#modal-titulo');
-  const errorEl = modal?.querySelector<HTMLElement>('[data-error]');
+  const panelSucc = modal?.querySelector<HTMLElement>('[data-estado="success"]');
+  const titulo    = document.querySelector<HTMLElement>('#modal-titulo');
+  const errorEl   = modal?.querySelector<HTMLElement>('[data-error]');
   const submitBtn = form?.querySelector<HTMLButtonElement>('.modal__submit');
-  const idInput = form?.querySelector<HTMLInputElement>('input[name="actividadId"]');
+  const idInput   = form?.querySelector<HTMLInputElement>('input[name="actividadId"]');
 
   function abrir(id: string, nombre: string) {
     if (!modal || !form) return;
@@ -108,50 +269,175 @@ const FILTROS: { value: Categoria | 'todas'; label: string }[] = [
     if (titulo) titulo.textContent = UI.modal.titulo(nombre);
     if (errorEl) errorEl.hidden = true;
     panelForm!.hidden = false;
-    panelSuccess!.hidden = true;
+    panelSucc!.hidden = true;
     modal.showModal();
   }
 
   document.querySelectorAll<HTMLButtonElement>('.js-inscribirse').forEach((btn) =>
-    btn.addEventListener('click', () =>
-      abrir(btn.dataset.id ?? '', btn.dataset.nombre ?? ''),
-    ),
+    btn.addEventListener('click', () => abrir(btn.dataset.id ?? '', btn.dataset.nombre ?? '')),
   );
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
+    if (!form.checkValidity()) { form.reportValidity(); return; }
     submitBtn?.setAttribute('aria-busy', 'true');
     if (submitBtn) submitBtn.textContent = UI.modal.submitLoading;
     if (errorEl) errorEl.hidden = true;
-
     const { error } = await actions.inscribirse(new FormData(form));
-
     submitBtn?.removeAttribute('aria-busy');
     if (submitBtn) submitBtn.textContent = UI.modal.submitIdle;
-
     if (error) {
-      if (errorEl) {
-        errorEl.textContent = UI.modal.errorMsg;
-        errorEl.hidden = false;
-      }
+      if (errorEl) { errorEl.textContent = UI.modal.errorMsg; errorEl.hidden = false; }
       return;
     }
     panelForm!.hidden = true;
-    panelSuccess!.hidden = false;
+    panelSucc!.hidden = false;
   });
 </script>
 
 <style>
-  .oferta__filtros {
+  /* ── Barra de controles sticky ──────────────────────────────────────── */
+  .oferta__controles {
+    position: sticky;
+    top: 64px;
+    z-index: 20;
+    background: var(--color-cream);
+    margin-inline: calc(-1 * var(--container-px));
+    padding-inline: var(--container-px);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 22%, transparent);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-7);
+  }
+
+  .oferta__search-input {
+    margin-left: auto;
+    width: min(220px, 100%);
+    padding: var(--space-2) var(--space-5);
+    border: 1.5px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    color: var(--text-main);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .oferta__search-input:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-secondary) 25%, transparent);
+  }
+  .oferta__search-input::placeholder { color: var(--text-muted); }
+
+  /* ── Fila de dropdowns ───────────────────────────────────────────────── */
+  .oferta__filtros-barra {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-3);
-    margin: var(--space-6) 0 var(--space-7);
   }
+
+  .of-drop {
+    position: relative;
+  }
+
+  .of-drop__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: 1.5px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    min-height: 40px;
+    white-space: nowrap;
+    transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+  }
+  .of-drop__btn:hover {
+    border-color: var(--color-primary);
+  }
+  .of-drop__btn[aria-expanded="true"] {
+    border-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 6%, #fff);
+  }
+  .of-drop__btn--activo {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-cream);
+  }
+  .of-drop__btn--activo:hover,
+  .of-drop__btn--activo[aria-expanded="true"] {
+    background: color-mix(in srgb, var(--color-primary) 88%, #000);
+    border-color: var(--color-primary);
+  }
+
+  .of-drop__label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    opacity: 0.75;
+  }
+  .of-drop__btn--activo .of-drop__label {
+    color: inherit;
+    opacity: 0.7;
+  }
+
+  .of-drop__chevron {
+    flex-shrink: 0;
+    transition: transform var(--transition-fast);
+  }
+  .of-drop__btn[aria-expanded="true"] .of-drop__chevron {
+    transform: rotate(180deg);
+  }
+
+  .of-drop__menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 100%;
+    background: var(--color-cream);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 18%, transparent);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 24px rgba(41, 72, 76, 0.13);
+    list-style: none;
+    padding: var(--space-2) 0;
+    margin: 0;
+    z-index: 30;
+  }
+  .of-drop__btn[aria-expanded="true"] ~ .of-drop__menu {
+    display: block;
+  }
+
+  .of-drop__op {
+    padding: var(--space-2) var(--space-5);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-main);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+  .of-drop__op:hover {
+    background: color-mix(in srgb, var(--color-secondary) 22%, transparent);
+  }
+  .of-drop__op--sel {
+    font-weight: 700;
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-secondary) 14%, transparent);
+  }
+
   .oferta__grid {
     list-style: none;
     margin: 0;
@@ -166,6 +452,12 @@ const FILTROS: { value: Categoria | 'todas'; label: string }[] = [
   .oferta__grid > li > :global(.card) {
     width: 100%;
   }
+  .oferta__ver-todas {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-7);
+  }
+
   .oferta__vacio {
     margin-top: var(--space-6);
     font-size: var(--text-body-lg);

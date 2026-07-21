@@ -16,6 +16,17 @@ export const UI = {
     'contenido-gratuito': 'Contenido gratuito',
     'club-lectura': 'Club de lectura',
   },
+  filtrosAudiencia: {
+    todas: 'Todas las edades',
+    niños: 'Niños (3–10)',
+    juvenil: 'Juvenil (11+)',
+    adultos: 'Adultos',
+  },
+  filtrosCosto: {
+    todos: 'Todos',
+    gratuito: 'Gratuitos',
+    pago: 'De pago',
+  },
   actividad: {
     gratuito: 'Gratuito',
     sinCupos: 'Sin cupos disponibles',
