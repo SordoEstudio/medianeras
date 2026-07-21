@@ -28,12 +28,10 @@ const LUCIDE: Record<string, string> = {
     <p class="eyebrow">Qué hacemos</p>
     <h2 id="qh-titulo" class="label-seccion">{UI.queHacemos.titulo}</h2>
 
-    <div class="qh__filosofia" set:html={mdToHtml(config.filosofia)} />
-
     <ul class="qh__areas">
       {UI.queHacemos.areas.map((a, i) => (
         <li class="area">
-          <span class="area__icono" style={`color:${COLORES[i % COLORES.length]}`}>
+          <span class="area__icono" style={`--c:${COLORES[i % COLORES.length]}`}>
             <svg
               width="40"
               height="40"
@@ -52,17 +50,47 @@ const LUCIDE: Record<string, string> = {
         </li>
       ))}
     </ul>
+
+    <div class="qh__divisor" aria-hidden="true">
+      <span class="qh__divisor-linea"></span>
+      <img class="qh__divisor-sello" src="/brand/svg_elements/circle/conocimiento.svg" alt="" width="64" height="64" loading="lazy" />
+      <span class="qh__divisor-linea"></span>
+    </div>
+
+    <div class="qh__filosofia" set:html={mdToHtml(config.filosofia)} />
   </div>
 </section>
 
 <style>
+  .qh__divisor {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin: var(--space-8) 0;
+  }
+  .qh__divisor-linea {
+    flex: 1;
+    height: 2px;
+    background: var(--color-yellow);
+    border-radius: 2px;
+  }
+  .qh__divisor-sello {
+    flex-shrink: 0;
+    animation: girar-qh 22s linear infinite;
+  }
+  @keyframes girar-qh {
+    to { transform: rotate(360deg); }
+  }
+
   .qh__filosofia {
-    margin: 0 0 var(--space-8);
+    margin: 0;
   }
   .qh__filosofia :global(p) {
     font-size: var(--text-body-lg);
     color: var(--text-on-dark);
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-1);
+    line-height: 1.6;
+    text-align: center;
   }
   .qh__filosofia :global(em) {
     color: var(--color-secondary);
@@ -84,8 +112,16 @@ const LUCIDE: Record<string, string> = {
     padding: var(--space-6);
   }
   .area__icono {
-    display: block;
-    margin-bottom: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: var(--c);
+    color: var(--color-primary);
+    margin-bottom: var(--space-4);
+    flex-shrink: 0;
   }
   .area__nombre {
     font-size: var(--text-h3);
