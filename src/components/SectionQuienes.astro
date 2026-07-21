@@ -1,0 +1,356 @@
+---
+// SectionQuienes.astro — R01. Quiénes somos.
+// Grilla 2 col: texto izquierda, Sofía destacada derecha. Claudia y Laura abajo.
+import Sticker from './Sticker.astro';
+import { mdToHtml } from '../lib/markdown';
+import type { Integrante, ConfigSitio } from '../lib/types';
+
+interface Props {
+  equipo: Integrante[];
+  config: ConfigSitio;
+}
+const { equipo, config } = Astro.props;
+
+const sofia = equipo.find((i) => /fundador/i.test(i.rol));
+const docentes = equipo.filter((i) => !/fundador/i.test(i.rol));
+
+// Iniciales para avatar placeholder
+function iniciales(nombre: string): string {
+  return nombre
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]!.toUpperCase())
+    .join('');
+}
+---
+<section class="seccion quienes" id="quienes" aria-labelledby="quienes-titulo">
+  <div class="contenedor">
+    <p class="eyebrow">Quiénes somos</p>
+    <h2 id="quienes-titulo" class="label-seccion">Un espacio cultural en casa</h2>
+
+    <p class="quienes__subtitulo">Somos un espacio cultural de encuentros: un lugar para hablar de libros.</p>
+
+    <!-- Grilla principal -->
+    <div class="quienes__grid">
+      <!-- Izquierda: texto del espacio + historia -->
+      <div class="quienes__columna-texto">
+        <div class="quienes__texto" set:html={mdToHtml(config.quienesSomos)} />
+        <div class="quienes__historia" set:html={mdToHtml(config.historia)} />
+      </div>
+
+      <!-- Derecha: Sofía destacada -->
+      {sofia && (
+        <div class="persona-card sofia-card">
+          <div class="sofia-card__header">
+            {sofia.foto ? (
+              <img
+                class="sofia-card__foto"
+                src={sofia.foto}
+                alt={`Foto de ${sofia.nombre}`}
+                width="96"
+                height="96"
+                loading="lazy"
+              />
+            ) : (
+              <div class="sofia-card__avatar" aria-hidden="true">
+                {iniciales(sofia.nombre)}
+              </div>
+            )}
+            <div>
+              <p class="sofia-card__nombre">{sofia.nombre}</p>
+              <p class="sofia-card__rol">{sofia.rol}</p>
+            </div>
+          </div>
+
+          <p class="sofia-card__bio">{sofia.bio}</p>
+
+          {sofia.instagram && (
+            <a
+              class="sofia-card__ig"
+              href={`https://instagram.com/${sofia.instagram.replace('@', '')}`}
+              rel="noopener"
+            >
+              {sofia.instagram}
+            </a>
+          )}
+
+          <div class="sofia-card__sticker" aria-hidden="true">
+            <Sticker
+              texto="SABERES QUE DIALOGAN"
+              size={88}
+              bg="transparent"
+              textoColor="var(--color-secondary)"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Equipo: Claudia y Laura -->
+    {docentes.length > 0 && (
+      <div class="quienes__docentes">
+        <p class="quienes__sub-label eyebrow">El equipo</p>
+        <ul class="quienes__equipo">
+          {docentes.map((p) => (
+            <li>
+              <div class="persona-card">
+                <div class="persona">
+                  <div class="persona__header">
+                    {p.foto ? (
+                      <img
+                        class="persona__foto"
+                        src={p.foto}
+                        alt={`Foto de ${p.nombre}`}
+                        width="56"
+                        height="56"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div class="persona__avatar" aria-hidden="true">
+                        {iniciales(p.nombre)}
+                      </div>
+                    )}
+                    <div>
+                      <p class="persona__nombre">{p.nombre}</p>
+                      <p class="persona__rol">{p.rol}</p>
+                    </div>
+                  </div>
+                  <p class="persona__bio">{p.bio}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  /* ── Subtítulo centrado ──────────────────────────────────────────────────── */
+  .quienes__subtitulo {
+    font-size: var(--text-body-lg);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 52ch;
+    margin: 0 auto var(--space-9);
+    line-height: 1.6;
+  }
+
+  /* ── Grilla principal: texto | sofía ─────────────────────────────────────── */
+  .quienes__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-7);
+    align-items: start;
+    margin-bottom: var(--space-9);
+  }
+
+  .quienes__columna-texto {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .quienes__texto :global(p) {
+    font-size: var(--text-body-lg);
+    margin-bottom: var(--space-4);
+    line-height: 1.6;
+  }
+  .quienes__historia :global(p) {
+    font-size: var(--text-body);
+    color: var(--text-muted);
+    margin-bottom: var(--space-3);
+    line-height: 1.6;
+  }
+
+  /* ── Card base: borde fino + sombra suave ───────────────────────────────── */
+  .persona-card {
+    background: var(--color-cream);
+    border: 1px solid color-mix(in srgb, var(--color-secondary) 35%, transparent);
+    border-radius: var(--radius-card);
+    box-shadow: 0 1px 4px rgba(41, 72, 76, 0.06), 0 4px 18px rgba(41, 72, 76, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+  }
+  .persona-card:hover {
+    box-shadow: 0 2px 8px rgba(41, 72, 76, 0.08), 0 8px 32px rgba(41, 72, 76, 0.13);
+  }
+
+  /* ── Tarjeta Sofía: variante destacada ───────────────────────────────────── */
+  .sofia-card {
+    position: relative;
+    overflow: hidden;
+    padding: var(--space-7);
+    gap: var(--space-5);
+  }
+
+  .sofia-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .sofia-card__foto,
+  .sofia-card__avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .sofia-card__foto {
+    object-fit: cover;
+    border: 2px solid color-mix(in srgb, var(--color-secondary) 50%, transparent);
+  }
+  .sofia-card__avatar {
+    background: color-mix(in srgb, var(--color-secondary) 20%, var(--color-cream));
+    border: 2px solid color-mix(in srgb, var(--color-secondary) 45%, transparent);
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    letter-spacing: 0.02em;
+  }
+
+  .sofia-card__nombre {
+    font-size: var(--text-body-lg);
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+  }
+  .sofia-card__rol {
+    font-size: var(--text-sm);
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-top: var(--space-1);
+  }
+
+  .sofia-card__bio {
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .sofia-card__ig {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+    padding-bottom: 1px;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+    width: fit-content;
+  }
+  .sofia-card__ig:hover {
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
+  }
+
+  .sofia-card__sticker {
+    position: absolute;
+    bottom: -8px;
+    right: -8px;
+    opacity: 0.45;
+  }
+
+  /* ── Docentes (Claudia y Laura) ──────────────────────────────────────────── */
+  .quienes__docentes {
+    border-top: 1px solid color-mix(in srgb, var(--color-secondary) 25%, transparent);
+    padding-top: var(--space-7);
+  }
+  .quienes__sub-label {
+    margin-bottom: var(--space-5);
+  }
+
+  .quienes__equipo {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-5);
+  }
+
+  /* cada li es la card completa */
+  .quienes__equipo > li {
+    display: flex;
+  }
+  .quienes__equipo > li > .persona-card {
+    width: 100%;
+  }
+
+  .persona {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    width: 100%;
+  }
+
+  .persona__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .persona__foto,
+  .persona__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .persona__foto {
+    object-fit: cover;
+    border: 1px solid color-mix(in srgb, var(--color-secondary) 40%, transparent);
+  }
+  .persona__avatar {
+    background: color-mix(in srgb, var(--color-secondary) 18%, var(--color-cream));
+    border: 1px solid color-mix(in srgb, var(--color-secondary) 35%, transparent);
+    display: grid;
+    place-items: center;
+    font-size: var(--text-sm);
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+
+  .persona__nombre {
+    font-weight: 700;
+    font-size: var(--text-body);
+    color: var(--text-main);
+  }
+  .persona__rol {
+    color: var(--color-primary);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+  .persona__bio {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: 1.6;
+    border-top: 1px solid color-mix(in srgb, var(--color-secondary) 20%, transparent);
+    padding-top: var(--space-3);
+  }
+
+  /* ── Responsive ──────────────────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .quienes__grid {
+      grid-template-columns: 1fr;
+    }
+    .sofia-card__sticker {
+      opacity: 0.35;
+    }
+  }
+</style>

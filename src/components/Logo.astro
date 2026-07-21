@@ -1,0 +1,64 @@
+---
+// Logo.astro — wordmark oficial `medianeras` (Public Sans bold, lowercase) +
+// subrayado verde con muesca central hacia arriba (motivo de medianera).
+// Reproduce el asset de spec/Logos. Variante `icono` = `m` en cuadrado con corchetes.
+interface Props {
+  variante?: 'wordmark' | 'icono';
+  onDark?: boolean;
+  href?: string;
+}
+const { variante = 'wordmark', onDark = false, href = '#inicio' } = Astro.props;
+const colorTexto = onDark ? 'var(--text-on-dark)' : 'var(--color-primary)';
+---
+{variante === 'wordmark' ? (
+  <a href={href} class="logo" aria-label="medianeras — inicio">
+    <span class="logo__word" style={`color:${colorTexto}`}>medianeras</span>
+    <span class="logo__line" aria-hidden="true"></span>
+  </a>
+) : (
+  <a href={href} class="logo-icono" aria-label="medianeras — inicio">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+      <path d="M5 12V5h7M28 5h7v7M35 28v7h-7M12 35H5v-7" fill="none" stroke={colorTexto} stroke-width="2.5" stroke-linecap="round" />
+      <text x="20" y="28" text-anchor="middle" font-family="var(--font-sans)" font-weight="800" font-size="24" fill={colorTexto}>m</text>
+    </svg>
+  </a>
+)}
+
+<style>
+  .logo {
+    display: inline-block;
+    text-decoration: none;
+    line-height: 1;
+  }
+  .logo__word {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: var(--text-h3);
+    letter-spacing: -0.02em;
+    text-transform: lowercase;
+  }
+  /* Subrayado: línea verde con muesca cuadrada central hacia arriba. */
+  .logo__line {
+    position: relative;
+    display: block;
+    height: 3px;
+    margin-top: 6px;
+    background: var(--color-green-logo);
+    border-radius: 1px;
+  }
+  .logo__line::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    width: 9px;
+    height: 5px;
+    background: var(--color-green-logo);
+    border-radius: 1px 1px 0 0;
+  }
+  .logo-icono {
+    display: inline-flex;
+  }
+</style>

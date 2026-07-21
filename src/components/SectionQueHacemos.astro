@@ -1,0 +1,79 @@
+---
+// SectionQueHacemos.astro — R02. Filosofía + 4 áreas con íconos florales.
+// Sección oscura (ritmo de bloques teal/crema). Tono narrativo, en plural.
+import FloralIcon from './FloralIcon.astro';
+import { mdToHtml } from '../lib/markdown';
+import { UI } from '../content/ui';
+import type { ConfigSitio } from '../lib/types';
+
+interface Props {
+  config: ConfigSitio;
+}
+const { config } = Astro.props;
+
+// Color floral rotando con el ritmo de 4 colores de la marca.
+const COLORES = ['var(--color-yellow)', 'var(--color-red)', 'var(--color-secondary)', 'var(--color-olive)'];
+---
+<section class="seccion seccion--oscura que-hacemos" id="que-hacemos" aria-labelledby="qh-titulo">
+  <div class="contenedor">
+    <p class="eyebrow">Qué hacemos</p>
+    <h2 id="qh-titulo" class="label-seccion">{UI.queHacemos.titulo}</h2>
+
+    <div class="qh__filosofia" set:html={mdToHtml(config.filosofia)} />
+
+    <ul class="qh__areas">
+      {UI.queHacemos.areas.map((a, i) => (
+        <li class="area">
+          <span class="area__icono"><FloralIcon variante={a.icono} color={COLORES[i % COLORES.length]} size={56} /></span>
+          <h3 class="area__nombre">{a.nombre}</h3>
+          <p class="area__texto">{a.texto}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .qh__filosofia {
+    margin: 0 0 var(--space-8);
+  }
+  .qh__filosofia :global(p) {
+    font-size: var(--text-body-lg);
+    color: var(--text-on-dark);
+    margin-bottom: var(--space-4);
+  }
+  .qh__filosofia :global(em) {
+    color: var(--color-secondary);
+    font-style: italic;
+  }
+
+  .qh__areas {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-6);
+  }
+  .area {
+    background: color-mix(in srgb, var(--color-cream) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-secondary) 30%, transparent);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+  }
+  .area__icono {
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+  .area__nombre {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    color: var(--text-on-dark);
+    margin-bottom: var(--space-2);
+  }
+  .area__texto {
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-cream) 80%, transparent);
+  }
+</style>

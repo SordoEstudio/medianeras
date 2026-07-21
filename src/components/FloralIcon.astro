@@ -1,0 +1,51 @@
+---
+// FloralIcon.astro — íconos florales de la marca (silueta sólida, estilo plano).
+// Subset de la librería del sistema visual. Color vía prop (token de paleta).
+type Variante = 'flor' | 'hoja' | 'rama' | 'margarita';
+
+interface Props {
+  variante?: Variante;
+  color?: string;        // var(--color-*) — default teal
+  size?: number;
+  decorativo?: boolean;  // true => aria-hidden (default)
+}
+
+const {
+  variante = 'flor',
+  color = 'var(--color-primary)',
+  size = 48,
+  decorativo = true,
+} = Astro.props;
+
+const paths: Record<Variante, string> = {
+  // flor de 6 pétalos orgánica
+  flor: 'M32 8c3 6 3 10 0 14 5-3 9-3 13 1-5 1-8 3-10 8 6-1 10 1 12 6-6 0-10 2-12 7 2 5 1 9-3 13-2-5-5-8-10-9 2 6 0 10-5 13-3-5-3-9 0-14-5 3-9 3-13-1 5-1 8-3 10-8-6 1-10-1-12-6 6 0 10-2 12-7-2-5-1-9 3-13 2 5 5 8 10 9-2-6 0-10 5-13z',
+  // hoja tipo monstera
+  hoja: 'M12 52C12 28 28 12 52 12c0 24-16 40-40 40zm8-8c8-2 16-8 20-18-10 4-16 10-20 18z',
+  // ramita con hojas
+  rama: 'M32 56V14m0 8c-6-2-12 0-16 6 7 3 13 1 16-6zm0 12c6-2 12 0 16 6-7 3-13 1-16-6zm0 12c-6-2-12 0-16 6 7 3 13 1 16-6z',
+  // margarita centro
+  margarita: 'M32 6l4 14 12-8-6 14 14 2-12 8 12 8-14 2 6 14-12-8-4 14-4-14-12 8 6-14-14-2 12-8-12-8 14-2-6-14 12 8z',
+};
+
+const isStroke = variante === 'rama';
+---
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  fill="none"
+  aria-hidden={decorativo ? 'true' : undefined}
+  role={decorativo ? undefined : 'img'}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  {variante === 'margarita' && <circle cx="32" cy="32" r="7" fill="var(--color-yellow)" />}
+  <path
+    d={paths[variante]}
+    fill={isStroke ? 'none' : color}
+    stroke={isStroke ? color : 'none'}
+    stroke-width={isStroke ? 4 : 0}
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

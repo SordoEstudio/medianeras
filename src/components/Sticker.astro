@@ -1,0 +1,58 @@
+---
+// Sticker.astro — círculo con texto rotativo en el borde + flor central.
+// Decorativo. Texto: AMAMOS LEER · CONOCIMIENTO COMPARTIDO · BOOK LOVER.
+import FloralIcon from './FloralIcon.astro';
+
+interface Props {
+  texto?: string;
+  size?: number;
+  bg?: string;     // fondo del disco
+  textoColor?: string;
+}
+const {
+  texto = 'AMAMOS LEER',
+  size = 120,
+  bg = 'var(--color-cream)',
+  textoColor = 'var(--color-primary)',
+} = Astro.props;
+
+const repetido = `${texto} · ${texto} · `;
+const id = `sticker-${Math.random().toString(36).slice(2, 8)}`;
+---
+<div class="sticker" style={`width:${size}px;height:${size}px;background:${bg}`} aria-hidden="true">
+  <svg viewBox="0 0 120 120" width={size} height={size}>
+    <defs>
+      <path id={id} d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+    </defs>
+    <text font-family="var(--font-sans)" font-size="11" font-weight="700" letter-spacing="1.5" fill={textoColor}>
+      <textPath href={`#${id}`}>{repetido}</textPath>
+    </text>
+  </svg>
+  <div class="sticker__flor">
+    <FloralIcon variante="margarita" color="var(--color-red)" size={Math.round(size * 0.34)} />
+  </div>
+</div>
+
+<style>
+  .sticker {
+    position: relative;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+  .sticker svg {
+    position: absolute;
+    inset: 0;
+    animation: girar 18s linear infinite;
+  }
+  .sticker__flor {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+  @keyframes girar {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

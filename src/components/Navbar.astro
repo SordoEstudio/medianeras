@@ -1,0 +1,149 @@
+---
+// Navbar.astro — fija, anclas a secciones, hamburguesa en mobile.
+import Logo from './Logo.astro';
+import { UI } from '../content/ui';
+
+const links = [
+  { href: '#quienes', label: UI.nav.quienes },
+  { href: '#que-hacemos', label: UI.nav.queHacemos },
+  { href: '#propuestas', label: UI.nav.oferta },
+  { href: '#contacto', label: UI.nav.contacto },
+];
+---
+<header class="nav" id="inicio">
+  <div class="contenedor nav__inner">
+    <Logo variante="wordmark" />
+
+    <button
+      class="nav__burger"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="nav-menu"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="nav-menu" class="nav__menu" aria-label="Navegación principal">
+      <ul>
+        {links.map((l) => (
+          <li><a href={l.href}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('.nav__burger');
+  const menu = document.querySelector<HTMLElement>('#nav-menu');
+  burger?.addEventListener('click', () => {
+    const abierto = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!abierto));
+    burger.setAttribute('aria-label', abierto ? 'Abrir menú' : 'Cerrar menú');
+    menu?.classList.toggle('nav__menu--abierto', !abierto);
+  });
+  // Cerrar al clickear un link (mobile).
+  menu?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => {
+      burger?.setAttribute('aria-expanded', 'false');
+      menu.classList.remove('nav__menu--abierto');
+    }),
+  );
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--color-cream) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 30%, transparent);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+  }
+  .nav__menu ul {
+    display: flex;
+    gap: var(--space-6);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav__menu a {
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-main);
+    padding: var(--space-2) 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color var(--transition-base);
+  }
+  .nav__menu a:hover {
+    border-color: var(--color-red);
+  }
+
+  .nav__burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .nav__burger span {
+    width: 24px;
+    height: 2px;
+    background: var(--color-primary);
+    border-radius: 2px;
+    transition: transform var(--transition-base), opacity var(--transition-base);
+  }
+  .nav__burger[aria-expanded='true'] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav__burger[aria-expanded='true'] span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav__burger[aria-expanded='true'] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  @media (max-width: 768px) {
+    .nav__burger {
+      display: flex;
+    }
+    .nav__menu {
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--color-cream);
+      border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 30%, transparent);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-base);
+    }
+    .nav__menu--abierto {
+      max-height: 320px;
+    }
+    .nav__menu ul {
+      flex-direction: column;
+      gap: 0;
+      padding: var(--space-4) var(--container-px);
+    }
+    .nav__menu li {
+      border-bottom: 1px solid color-mix(in srgb, var(--color-secondary) 25%, transparent);
+    }
+    .nav__menu a {
+      display: block;
+      padding: var(--space-4) 0;
+    }
+  }
+</style>

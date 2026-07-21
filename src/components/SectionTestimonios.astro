@@ -1,0 +1,294 @@
+---
+// SectionTestimonios.astro — pila vertical de cards, controles a la derecha, sin dots.
+import type { Testimonio } from '../lib/types';
+interface Props { testimonios: Testimonio[]; }
+const { testimonios } = Astro.props;
+---
+<section class="seccion seccion--oscura testimonios" id="testimonios" aria-labelledby="test-titulo">
+  <div class="contenedor">
+    <p class="eyebrow">Lo que dicen</p>
+    <h2 id="test-titulo" class="label-seccion">La conversación sigue</h2>
+
+    <div class="test-layout">
+
+      <!-- Pila de cards -->
+      <div class="test-pila">
+        <div class="pila__ghost pila__ghost--2" aria-hidden="true"></div>
+        <div class="pila__ghost pila__ghost--1" aria-hidden="true"></div>
+
+        <div class="pila__track" role="region" aria-label="Testimonios de participantes" aria-live="polite" aria-atomic="true">
+          {testimonios.map((t, i) => (
+            <div
+              class={`pila__item${i === 0 ? ' es-activo' : ''}`}
+              data-index={i}
+              aria-hidden={i !== 0 ? 'true' : 'false'}
+            >
+              <article class="card-cita">
+                <div class="card-cita__cuerpo">
+                  <span class="card-cita__comilla" aria-hidden="true">"</span>
+                  <p class="card-cita__texto">{t.texto}</p>
+                </div>
+                <footer class="card-cita__pie">
+                  <span class="card-cita__autor">Participante de Medianeras</span>
+                </footer>
+              </article>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Controles verticales -->
+      <div class="test-controles" role="group" aria-label="Navegación de testimonios">
+        <button class="btn-nav" id="test-prev" type="button" aria-label="Testimonio anterior">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M4 11.5L9 6.5L14 11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <span class="test-contador" id="test-contador" aria-live="polite">1 / {testimonios.length}</span>
+        <button class="btn-nav" id="test-next" type="button" aria-label="Siguiente testimonio">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M4 6.5L9 11.5L14 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  const items   = Array.from(document.querySelectorAll<HTMLElement>('.pila__item'));
+  const btnPrev = document.getElementById('test-prev')!;
+  const btnNext = document.getElementById('test-next')!;
+  const contador = document.getElementById('test-contador')!;
+
+  let actual = 0;
+  let timer: ReturnType<typeof setInterval> | null = null;
+
+  function ir(idx: number) {
+    if (idx === actual) return;
+    const dir = idx > actual ? 28 : -28;
+
+    // Salida
+    items[actual]!.classList.remove('es-activo');
+    items[actual]!.setAttribute('aria-hidden', 'true');
+
+    // Entrada: posición inicial sin transición
+    const entrante = items[idx]!;
+    entrante.style.transition = 'none';
+    entrante.style.transform  = `translateY(${dir}px)`;
+    entrante.style.opacity    = '0';
+
+    // Doble rAF: primer frame aplica posición, segundo dispara la transición
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        entrante.style.transition = '';
+        entrante.style.transform  = '';
+        entrante.style.opacity    = '';
+        entrante.classList.add('es-activo');
+        entrante.setAttribute('aria-hidden', 'false');
+      });
+    });
+
+    actual = idx;
+    contador.textContent = `${actual + 1} / ${items.length}`;
+  }
+
+  const sig = () => ir((actual + 1) % items.length);
+  const ant = () => ir((actual - 1 + items.length) % items.length);
+
+  function arrancar() {
+    if (timer) clearInterval(timer);
+    timer = setInterval(sig, 6000);
+  }
+
+  btnNext.addEventListener('click', () => { sig(); arrancar(); });
+  btnPrev.addEventListener('click', () => { ant(); arrancar(); });
+
+  // Pausa en hover
+  const seccion = document.querySelector<HTMLElement>('.testimonios');
+  seccion?.addEventListener('mouseenter', () => { if (timer) clearInterval(timer); });
+  seccion?.addEventListener('mouseleave', arrancar);
+
+  // Swipe vertical
+  let yStart = 0;
+  const track = document.querySelector('.pila__track');
+  track?.addEventListener('touchstart', (e) => { yStart = (e as TouchEvent).touches[0]!.clientY; }, { passive: true });
+  track?.addEventListener('touchend', (e) => {
+    const dy = (e as TouchEvent).changedTouches[0]!.clientY - yStart;
+    if (Math.abs(dy) > 44) { dy < 0 ? sig() : ant(); arrancar(); }
+  });
+
+  arrancar();
+</script>
+
+<style>
+  /* ── Sección ─────────────────────────────────────────────────────────── */
+  .testimonios .eyebrow     { color: var(--color-secondary); }
+  .testimonios .label-seccion { color: var(--color-cream); }
+
+  /* ── Layout: pila + controles ────────────────────────────────────────── */
+  .test-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space-6);
+    margin-top: var(--space-7);
+  }
+
+  /* ── Pila ────────────────────────────────────────────────────────────── */
+  .test-pila {
+    position: relative;
+    padding-bottom: 20px; /* espacio para los ghosts que sobresalen */
+  }
+
+  /* Cards fantasma debajo de la card activa */
+  .pila__ghost {
+    position: absolute;
+    inset: 0;
+    background: var(--color-cream);
+    border-radius: var(--radius-card);
+    pointer-events: none;
+  }
+  .pila__ghost--1 {
+    transform: translate(0, 8px) scale(0.97);
+    opacity: 0.4;
+    z-index: 0;
+  }
+  .pila__ghost--2 {
+    transform: translate(0, 15px) scale(0.94);
+    opacity: 0.2;
+    z-index: -1;
+  }
+
+  /* ── Track: todos los items en mismo grid-cell ───────────────────────── */
+  .pila__track {
+    display: grid;
+    position: relative;
+    z-index: 1;
+  }
+  .pila__item {
+    grid-area: 1 / 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .pila__item.es-activo {
+    opacity: 1;
+    transform: translateY(0) !important;
+    pointer-events: auto;
+  }
+
+  /* ── Card ────────────────────────────────────────────────────────────── */
+  .card-cita {
+    background: var(--color-cream);
+    border-radius: var(--radius-card);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.10),
+      0 16px 40px rgba(0, 0, 0, 0.14);
+    padding: var(--space-8) var(--space-7);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    min-height: 200px;
+  }
+
+  .card-cita__cuerpo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .card-cita__comilla {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 4.5rem;
+    line-height: 0.8;
+    color: var(--color-secondary);
+    display: block;
+    user-select: none;
+  }
+
+  .card-cita__texto {
+    font-size: var(--text-body-lg);
+    line-height: 1.75;
+    font-style: italic;
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  .card-cita__pie {
+    border-top: 1px solid color-mix(in srgb, var(--color-primary) 12%, transparent);
+    padding-top: var(--space-3);
+  }
+  .card-cita__autor {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: color-mix(in srgb, var(--text-main) 55%, transparent);
+  }
+
+  /* ── Controles verticales ────────────────────────────────────────────── */
+  .test-controles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .btn-nav {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--color-cream) 22%, transparent);
+    background: transparent;
+    color: var(--color-cream);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background var(--transition-base), border-color var(--transition-base), color var(--transition-base), transform var(--transition-base);
+    flex-shrink: 0;
+  }
+  .btn-nav:hover {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: var(--color-primary);
+    transform: scale(1.08);
+  }
+  .btn-nav:focus-visible {
+    outline: 3px solid var(--color-yellow);
+    outline-offset: 2px;
+  }
+
+  .test-contador {
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--color-cream) 50%, transparent);
+    line-height: 1;
+  }
+
+  /* ── Responsive ──────────────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .test-layout {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+    }
+    .test-controles {
+      flex-direction: row;
+      justify-content: center;
+      order: 2;
+      gap: var(--space-5);
+    }
+    .card-cita {
+      padding: var(--space-6) var(--space-5);
+    }
+    .card-cita__comilla { font-size: 3rem; }
+    .card-cita__texto   { font-size: var(--text-body); }
+  }
+
+  /* ── Reduced motion ──────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .pila__item { transition: opacity 0.2s ease !important; }
+  }
+</style>

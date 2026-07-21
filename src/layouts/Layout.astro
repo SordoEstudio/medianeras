@@ -1,0 +1,91 @@
+---
+// src/layouts/Layout.astro — shell del sitio. Importa tokens + fuente. SEO + JSON-LD.
+import { SEO } from 'astro-seo';
+import '../styles/tokens.css';
+import '../styles/design-system.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  jsonLd?: unknown[]; // bloques Schema.org (LocalBusiness, Event, etc.)
+}
+
+const {
+  title,
+  description = 'Espacio cultural de lectura, escritura y pensamiento. Talleres, encuentros y capacitaciones.',
+  ogImage = '/brand/og-default.jpg',
+  jsonLd = [],
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+const ogImageAbs = new URL(ogImage, Astro.site ?? Astro.url).href;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#29484C" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonical}
+      openGraph={{
+        basic: { title, type: 'website', image: ogImageAbs, url: canonical },
+        optional: { siteName: 'medianeras', locale: 'es_AR', description },
+      }}
+      twitter={{ card: 'summary_large_image' }}
+    />
+
+    {jsonLd.map((bloque) => (
+      <script type="application/ld+json" set:html={JSON.stringify(bloque)} />
+    ))}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg-site);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a {
+    color: inherit;
+  }
+</style>

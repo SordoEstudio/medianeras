@@ -1,0 +1,98 @@
+---
+// SectionHero.astro — frase de marca + tagline "Pensar más allá" + CTA.
+// Lettering: título con mezcla de peso + resaltado marcador sobre palabra clave.
+import Sticker from './Sticker.astro';
+import FloralIcon from './FloralIcon.astro';
+---
+<section class="hero" aria-labelledby="hero-titulo">
+  <div class="contenedor hero__inner">
+    <div class="hero__texto">
+      <p class="eyebrow">Espacio cultural · lectura · escritura · pensamiento</p>
+      <h1 id="hero-titulo" class="titulo-mix hero__titulo">
+        Entre páginas también <strong>florecen</strong> <span class="marca">encuentros</span>.
+      </h1>
+      <p class="hero__tagline">Leemos juntos para no sentirnos solos.</p>
+      <p class="hero__lead">
+        Talleres, encuentros y conversaciones. El conocimiento no se transmite: se construye en diálogo.
+      </p>
+      <div class="hero__cta">
+        <a class="boton" href="#propuestas">Conocé las propuestas</a>
+        <a class="boton boton--secundario" href="#quienes">Quiénes somos</a>
+      </div>
+    </div>
+
+    <div class="hero__deco" aria-hidden="true">
+      <Sticker texto="UN LUGAR PARA HABLAR DE LIBROS" size={132} />
+      <span class="hero__flor hero__flor--1"><FloralIcon variante="flor" color="var(--color-yellow)" size={72} /></span>
+      <span class="hero__flor hero__flor--2"><FloralIcon variante="hoja" color="var(--color-secondary)" size={64} /></span>
+      <span class="hero__flor hero__flor--3"><FloralIcon variante="margarita" color="var(--color-olive)" size={56} /></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: var(--space-9) var(--section-py);
+  }
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .hero__titulo {
+    font-size: var(--text-display);
+    margin: var(--space-4) 0 var(--space-3);
+    max-width: 14ch;
+  }
+  .hero__tagline {
+    font-size: var(--text-h2);
+    font-weight: 800;
+    font-style: italic;
+    color: var(--color-red);
+    margin-bottom: var(--space-4);
+  }
+  .hero__lead {
+    font-size: var(--text-body-lg);
+    color: var(--text-muted);
+    max-width: 46ch;
+    margin-bottom: var(--space-6);
+  }
+  .hero__cta {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .hero__deco {
+    position: relative;
+    height: 100%;
+    min-height: 280px;
+  }
+  .hero__deco > :global(.sticker) {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .hero__flor {
+    position: absolute;
+  }
+  .hero__flor--1 { bottom: 12%; left: 6%; }
+  .hero__flor--2 { top: 18%; left: 30%; }
+  .hero__flor--3 { bottom: 28%; right: 8%; }
+
+  @media (max-width: 768px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+    }
+    .hero__deco {
+      min-height: 180px;
+      order: -1;
+    }
+    .hero__deco > :global(.sticker) {
+      position: relative;
+      margin-inline: auto;
+    }
+    .hero__flor { display: none; }
+  }
+</style>

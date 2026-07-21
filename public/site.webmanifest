@@ -1,0 +1,12 @@
+{
+  "name": "medianeras",
+  "short_name": "medianeras",
+  "description": "Espacio cultural de lectura, escritura y pensamiento.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBF5EC",
+  "theme_color": "#29484C",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

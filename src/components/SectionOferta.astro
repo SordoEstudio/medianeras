@@ -1,0 +1,174 @@
+---
+// SectionOferta.astro — foco comercial (R03). Filtro por categoría + grilla + modal.
+// Filtrado client-side por data-categoria. Modal de inscripción vía Astro Action.
+import ActividadCard from './ActividadCard.astro';
+import ModalInscripcion from './ModalInscripcion.astro';
+import { UI } from '../content/ui';
+import type { Actividad, Categoria } from '../lib/types';
+
+interface Props {
+  actividades: Actividad[];
+}
+const { actividades } = Astro.props;
+
+// Orden: destacadas primero, luego por fecha de publicación desc.
+const ordenadas = [...actividades].sort((a, b) => {
+  if (a.destacada !== b.destacada) return a.destacada ? -1 : 1;
+  return b.publishedAt.localeCompare(a.publishedAt);
+});
+
+// Solo mostrar chips de categorías con al menos una actividad
+const categoriasPresentes = [...new Set(actividades.map((a) => a.categoria))] as Categoria[];
+const ORDEN: Categoria[] = ['taller', 'encuentro', 'club-lectura', 'capacitacion', 'contenido-gratuito'];
+const FILTROS: { value: Categoria | 'todas'; label: string }[] = [
+  { value: 'todas', label: UI.filtros.todas },
+  ...ORDEN
+    .filter((c) => categoriasPresentes.includes(c))
+    .map((c) => ({ value: c, label: UI.filtros[c] })),
+];
+---
+<section class="seccion oferta" id="propuestas" aria-labelledby="oferta-titulo">
+  <div class="contenedor">
+    <p class="eyebrow">Qué ofrecemos</p>
+    <h2 id="oferta-titulo" class="label-seccion">Propuestas</h2>
+
+    <div class="oferta__filtros" role="group" aria-label="Filtrar por categoría">
+      {FILTROS.map((f, i) => (
+        <button class="chip" data-filtro={f.value} aria-pressed={i === 0 ? 'true' : 'false'}>
+          {f.label}
+        </button>
+      ))}
+    </div>
+
+    <ul class="oferta__grid" id="oferta-grid">
+      {ordenadas.map((a) => (
+        <li data-categoria={a.categoria}>
+          <ActividadCard actividad={a} />
+        </li>
+      ))}
+    </ul>
+
+    <p class="oferta__vacio" id="oferta-vacio" hidden></p>
+  </div>
+</section>
+
+<ModalInscripcion />
+
+<script>
+  import { actions } from 'astro:actions';
+  import { UI } from '../content/ui';
+
+  // ── Filtro de categoría ──────────────────────────────────────────────
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip[data-filtro]');
+  const items = document.querySelectorAll<HTMLLIElement>('#oferta-grid > li');
+  const vacio = document.querySelector<HTMLElement>('#oferta-vacio');
+  const LABELS: Record<string, string> = {
+    taller: 'talleres',
+    encuentro: 'encuentros',
+    'club-lectura': 'clubs de lectura',
+    capacitacion: 'capacitaciones',
+    'contenido-gratuito': 'contenido gratuito',
+  };
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const cat = chip.dataset.filtro!;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      let visibles = 0;
+      items.forEach((li) => {
+        const ok = cat === 'todas' || li.dataset.categoria === cat;
+        li.hidden = !ok;
+        if (ok) visibles++;
+      });
+      if (vacio) {
+        if (visibles === 0) {
+          vacio.textContent = UI.empty.sinActividades(LABELS[cat] ?? 'propuestas');
+          vacio.hidden = false;
+        } else {
+          vacio.hidden = true;
+        }
+      }
+    }),
+  );
+
+  // ── Modal de inscripción ─────────────────────────────────────────────
+  const modal = document.querySelector<HTMLDialogElement>('#modal-inscripcion');
+  const form = document.querySelector<HTMLFormElement>('#form-inscripcion');
+  const panelForm = modal?.querySelector<HTMLElement>('[data-estado="form"]');
+  const panelSuccess = modal?.querySelector<HTMLElement>('[data-estado="success"]');
+  const titulo = document.querySelector<HTMLElement>('#modal-titulo');
+  const errorEl = modal?.querySelector<HTMLElement>('[data-error]');
+  const submitBtn = form?.querySelector<HTMLButtonElement>('.modal__submit');
+  const idInput = form?.querySelector<HTMLInputElement>('input[name="actividadId"]');
+
+  function abrir(id: string, nombre: string) {
+    if (!modal || !form) return;
+    form.reset();
+    idInput!.value = id;
+    if (titulo) titulo.textContent = UI.modal.titulo(nombre);
+    if (errorEl) errorEl.hidden = true;
+    panelForm!.hidden = false;
+    panelSuccess!.hidden = true;
+    modal.showModal();
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.js-inscribirse').forEach((btn) =>
+    btn.addEventListener('click', () =>
+      abrir(btn.dataset.id ?? '', btn.dataset.nombre ?? ''),
+    ),
+  );
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    submitBtn?.setAttribute('aria-busy', 'true');
+    if (submitBtn) submitBtn.textContent = UI.modal.submitLoading;
+    if (errorEl) errorEl.hidden = true;
+
+    const { error } = await actions.inscribirse(new FormData(form));
+
+    submitBtn?.removeAttribute('aria-busy');
+    if (submitBtn) submitBtn.textContent = UI.modal.submitIdle;
+
+    if (error) {
+      if (errorEl) {
+        errorEl.textContent = UI.modal.errorMsg;
+        errorEl.hidden = false;
+      }
+      return;
+    }
+    panelForm!.hidden = true;
+    panelSuccess!.hidden = false;
+  });
+</script>
+
+<style>
+  .oferta__filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: var(--space-6) 0 var(--space-7);
+  }
+  .oferta__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  }
+  .oferta__grid > li {
+    display: flex;
+  }
+  .oferta__grid > li > :global(.card) {
+    width: 100%;
+  }
+  .oferta__vacio {
+    margin-top: var(--space-6);
+    font-size: var(--text-body-lg);
+    color: var(--text-muted);
+  }
+</style>

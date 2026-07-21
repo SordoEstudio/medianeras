@@ -1,0 +1,178 @@
+[
+  {
+    "id": "act-001",
+    "slug": "maternidades",
+    "nombre": "Maternidades",
+    "descripcion": "Encuentro para intercambiar diálogos a partir de la película \"Distancia de rescate\", basada en la novela homónima de Samanta Schweblin. Un espacio para pensar la maternidad desde la literatura y el cine.",
+    "descripcionLarga": "## Sobre el encuentro\n\nA partir de la película *Distancia de rescate* —basada en la novela de Samanta Schweblin— nos encontramos para intercambiar miradas sobre la maternidad, el cuerpo, el miedo y la naturaleza.\n\n**No hace falta haber leído el libro ni haber visto la película completa para participar.** En Medianeras charlamos sobre las temáticas en torno al texto. El espacio es para compartir experiencias, y eso pasa siempre.\n\n**Dictado por:** Claudia Casabella, Laura Adriana Basso y Sofía Casabella.",
+    "categoria": "encuentro",
+    "docente": {
+      "id": "int-sofia",
+      "nombre": "Sofía Casabella",
+      "bio": "Lic. en Comunicación Social (UNR), Mgtr. en Investigación en Comunicación Social (UPF Barcelona). Fundadora de Medianeras."
+    },
+    "docentes": [
+      {
+        "id": "int-claudia",
+        "nombre": "Claudia Casabella",
+        "bio": "Docente y mediadora lectora."
+      },
+      {
+        "id": "int-laura",
+        "nombre": "Laura Adriana Basso",
+        "bio": "Especialista en Literatura Infantil y Juvenil. Mg. en Libros y Literatura para Niños y Jóvenes (UAB). Más de 33 años de trayectoria."
+      },
+      {
+        "id": "int-sofia",
+        "nombre": "Sofía Casabella",
+        "bio": "Lic. en Comunicación Social (UNR), Mgtr. en Investigación en Comunicación Social (UPF Barcelona). Fundadora de Medianeras."
+      }
+    ],
+    "fechas": [{ "fecha": "2026-07-24", "hora": "18:30", "duracion": 120 }],
+    "modalidad": "presencial",
+    "precio": 30000,
+    "cupos": 20,
+    "estado": "activo",
+    "destacada": true,
+    "publishedAt": "2026-07-15T00:00:00Z"
+  },
+  {
+    "id": "act-002",
+    "slug": "club-lectura-libro-pelicula",
+    "nombre": "Club de lectura: libro + película",
+    "descripcion": "Un espacio donde la literatura y el cine se encuentran. Leemos un libro y lo ponemos en diálogo con su adaptación cinematográfica o con una película que lo ilumina desde otro ángulo. Cada encuentro, una historia nueva.",
+    "categoria": "club-lectura",
+    "docente": {
+      "id": "int-sofia",
+      "nombre": "Sofía Casabella",
+      "bio": "Fundadora de Medianeras."
+    },
+    "docentes": [
+      {
+        "id": "int-claudia",
+        "nombre": "Claudia Casabella",
+        "bio": "Docente y mediadora lectora."
+      },
+      {
+        "id": "int-laura",
+        "nombre": "Laura Adriana Basso",
+        "bio": "Especialista en Literatura Infantil y Juvenil."
+      },
+      {
+        "id": "int-sofia",
+        "nombre": "Sofía Casabella",
+        "bio": "Fundadora de Medianeras."
+      }
+    ],
+    "fechas": [{ "fecha": "2026-08-07", "hora": "19:00", "duracion": 120 }],
+    "modalidad": "presencial",
+    "precio": 25000,
+    "cupos": 18,
+    "estado": "activo",
+    "destacada": false,
+    "publishedAt": "2026-07-01T00:00:00Z"
+  },
+  {
+    "id": "act-003",
+    "slug": "formacion-literatura-infantil-docentes",
+    "nombre": "Taller de Formación en Literatura Infantil para Docentes",
+    "descripcion": "Capacitación semanal para docentes que quieren incorporar la literatura infantil y juvenil como herramienta pedagógica. A cargo de Laura Adriana Basso, especialista con más de 33 años de trayectoria en el nivel superior.",
+    "categoria": "capacitacion",
+    "docente": {
+      "id": "int-laura",
+      "nombre": "Laura Adriana Basso",
+      "bio": "Profesora en Castellano, Literatura y Latín. Especialista en Literatura Infantil y Juvenil. Mg. en Libros y Literatura para Niños y Jóvenes (UAB). Docente de nivel superior con más de 33 años de trayectoria."
+    },
+    "fechas": [
+      { "fecha": "2026-07-28", "hora": "18:00", "duracion": 90 },
+      { "fecha": "2026-08-04", "hora": "18:00", "duracion": 90 },
+      { "fecha": "2026-08-11", "hora": "18:00", "duracion": 90 }
+    ],
+    "modalidad": "presencial",
+    "precio": 20000,
+    "cupos": 15,
+    "estado": "activo",
+    "destacada": true,
+    "publishedAt": "2026-07-01T00:00:00Z"
+  },
+  {
+    "id": "act-004",
+    "slug": "club-lectura-mes",
+    "nombre": "Club de lectura del mes",
+    "descripcion": "Cada mes, un libro y un espacio de conversación. No hace falta haber leído el libro entero: en Medianeras charlamos sobre las temáticas en torno al texto. No hay persona que no hable.",
+    "categoria": "club-lectura",
+    "docente": {
+      "id": "int-sofia",
+      "nombre": "Sofía Casabella",
+      "bio": "Lic. en Comunicación Social (UNR), Mgtr. en Investigación en Comunicación Social (UPF Barcelona). Fundadora de Medianeras."
+    },
+    "fechas": [{ "fecha": "2026-08-14", "hora": "19:30", "duracion": 90 }],
+    "modalidad": "presencial",
+    "precio": 20000,
+    "cupos": 20,
+    "estado": "activo",
+    "destacada": false,
+    "publishedAt": "2026-07-01T00:00:00Z"
+  },
+  {
+    "id": "act-005",
+    "slug": "medianeras-kids",
+    "nombre": "Medianeras Kids",
+    "descripcion": "El club literario para niñas y niños de 3 a 10 años, donde los libros son el inicio de grandes conversaciones. Un espacio cálido y lúdico para descubrir el placer de leer.",
+    "categoria": "encuentro",
+    "docente": {
+      "id": "int-sofia",
+      "nombre": "Sofía Casabella",
+      "bio": "Fundadora de Medianeras."
+    },
+    "fechas": [{ "fecha": "2026-08-09", "hora": "10:30", "duracion": 60 }],
+    "modalidad": "presencial",
+    "precio": 15000,
+    "cupos": 12,
+    "estado": "proximamente",
+    "destacada": false,
+    "publishedAt": "2026-07-01T00:00:00Z"
+  },
+  {
+    "id": "act-006",
+    "slug": "medianeras-juvenil",
+    "nombre": "Medianeras Juvenil",
+    "descripcion": "El espacio de los que están aprendiendo a ser grandes lectores. De 11 a 20 años, con libros que importan, conversaciones que suman y escritura que puede salir a la luz.",
+    "categoria": "encuentro",
+    "docente": {
+      "id": "int-sofia",
+      "nombre": "Sofía Casabella",
+      "bio": "Fundadora de Medianeras."
+    },
+    "fechas": [{ "fecha": "2026-08-21", "hora": "18:00", "duracion": 90 }],
+    "modalidad": "presencial",
+    "precio": 15000,
+    "cupos": 15,
+    "estado": "proximamente",
+    "destacada": false,
+    "publishedAt": "2026-07-01T00:00:00Z"
+  },
+  {
+    "id": "act-007",
+    "slug": "club-harry-potter",
+    "nombre": "Club Harry Potter",
+    "descripcion": "Para adolescentes de 11 a 15 años. Nos reunimos semanalmente para explorar el universo de Harry Potter: los libros, los personajes y todo lo que la saga tiene para decirnos sobre amistad, valentía y el mundo real.",
+    "categoria": "encuentro",
+    "docente": {
+      "id": "int-sofia",
+      "nombre": "Sofía Casabella",
+      "bio": "Fundadora de Medianeras."
+    },
+    "fechas": [
+      { "fecha": "2026-07-28", "hora": "18:00", "duracion": 120 },
+      { "fecha": "2026-08-04", "hora": "18:00", "duracion": 120 },
+      { "fecha": "2026-08-11", "hora": "18:00", "duracion": 120 }
+    ],
+    "modalidad": "presencial",
+    "precio": 18000,
+    "cupos": 12,
+    "estado": "activo",
+    "destacada": false,
+    "publishedAt": "2026-07-01T00:00:00Z"
+  }
+]

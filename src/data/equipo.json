@@ -1,0 +1,21 @@
+[
+  {
+    "id": "int-sofia",
+    "nombre": "Sofía Casabella",
+    "rol": "Fundadora y directora",
+    "bio": "Licenciada en Comunicación Social (UNR) y Magíster en Investigación en Comunicación Social (UPF, Barcelona). Doctoranda en Comunicación en la Universidad Austral, donde investiga los bookfluencers como mediadores culturales. Integra la red ALFAMED Joven. Consultora en Comunicación y Educación para instituciones educativas, dicta seminarios sobre literatura, series y cine como estrategias pedagógicas, y coordina talleres de lectura digital y lectura transmedia.",
+    "instagram": "@medianeras.lecturas"
+  },
+  {
+    "id": "int-claudia",
+    "nombre": "Claudia Casabella",
+    "rol": "Docente",
+    "bio": "Docente y mediadora lectora. Coordina clubes de lectura y espacios de encuentro con una mirada que une el rigor crítico y la calidez del diálogo."
+  },
+  {
+    "id": "int-laura",
+    "nombre": "Laura Adriana Basso",
+    "rol": "Docente especialista",
+    "bio": "Profesora en Castellano, Literatura y Latín. Especialista en Literatura Infantil y Juvenil. Mg. en Libros y Literatura para Niños y Jóvenes (UAB). Docente de nivel superior en el Instituto Superior del Profesorado N.º 2 de Rafaela, con más de 33 años de trayectoria. Becaria de la Residencia Cornelia Funke (Italia) 2023, 2024 y 2025. Investigadora, escritora y formadora de lectores."
+  }
+]

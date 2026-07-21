@@ -1,0 +1,77 @@
+/* src/styles/tokens.css — fuente única de tokens. Importar en Layout.astro.
+   Nunca hardcodear HEX en componentes. */
+
+:root {
+  /* Paleta Medianeras (Chiare Studio) */
+  --color-primary:   #29484C;  /* teal oscuro */
+  --color-secondary: #98CBB4;  /* verde menta */
+  --color-cream:     #FBF5EC;  /* crema */
+  --color-yellow:    #EAB82B;  /* mostaza */
+  --color-red:       #D94F2D;  /* rojo-naranja */
+  --color-olive:     #B0B846;  /* oliva */
+  --color-green-logo:#3DA56E;  /* verde del logo (línea con muesca) — asset de marca */
+
+  /* Semántica */
+  --bg-site:         var(--color-cream);
+  --bg-dark:         var(--color-primary);
+  --text-main:       var(--color-primary);
+  --text-muted:      #6B7280;
+  --text-on-dark:    var(--color-cream);
+  --cta-bg:          var(--color-red);
+  --cta-text:        var(--color-cream);
+  --cta-hover-bg:    var(--color-primary);
+  --tag-fecha-bg:    var(--color-yellow);
+  --tag-fecha-text:  var(--color-primary);
+  --accent-line:     var(--color-secondary);
+
+  /* Tipografía */
+  --font-sans:       'Public Sans', system-ui, sans-serif;
+  --text-display:    clamp(2.5rem, 6vw, 4rem);
+  --text-h1:         clamp(2rem, 4vw, 3rem);
+  --text-h2:         clamp(1.5rem, 3vw, 2rem);
+  --text-h3:         1.375rem;
+  --text-body-lg:    1.125rem;
+  --text-body:       1rem;
+  --text-sm:         0.875rem;
+  --text-xs:         0.75rem;
+
+  /* Espaciado */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.5rem;
+  --space-6:  2rem;
+  --space-7:  3rem;
+  --space-8:  4rem;
+  --space-9:  6rem;
+  --space-10: 8rem;
+
+  /* Layout */
+  --container-max:     1200px;
+  --container-px:      var(--space-6);
+  --section-py:        var(--space-10);
+
+  /* Radios */
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   24px;
+  --radius-pill: 999px;
+  --radius-card: 16px;
+
+  /* Sombras */
+  --shadow-card:  0 2px 16px rgba(41, 72, 76, 0.08);
+  --shadow-modal: 0 8px 40px rgba(41, 72, 76, 0.18);
+
+  /* Transiciones */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --container-px: var(--space-5);
+    --section-py:   var(--space-8);
+  }
+}

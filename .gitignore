@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.production
+.env.local
+.env.development
+.DS_Store
+.astro/
+graphify-out/
+.agents/
+.claude/

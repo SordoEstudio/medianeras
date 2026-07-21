@@ -1,0 +1,255 @@
+---
+// ActividadCard.astro — card de actividad inspirada en el estilo visual de IG stories.
+// Banda superior de color por categoría. Fecha prominente. Múltiples docentes.
+import FloralIcon from './FloralIcon.astro';
+import { UI } from '../content/ui';
+import { primeraFecha, formatPrecio, labelModalidad, fechaIg } from '../lib/format';
+import type { Actividad } from '../lib/types';
+
+interface Props {
+  actividad: Actividad;
+}
+const { actividad: a } = Astro.props;
+
+const primerFechaObj = a.fechas[0];
+const ig = primerFechaObj ? fechaIg(primerFechaObj) : null;
+const horaLabel = ig
+  ? ig.horaFin ? `${ig.hora} a ${ig.horaFin} hs` : `${ig.hora} hs`
+  : null;
+
+const precio = formatPrecio(a.precio);
+const esGratis = a.precio === undefined;
+const esContenido = a.categoria === 'contenido-gratuito';
+const cerrado = a.estado === 'cerrado';
+const proximamente = a.estado === 'proximamente';
+
+// Todos los docentes o el principal
+const docenteLabel = a.docentes?.length
+  ? a.docentes.map((d) => d.nombre).join(' · ')
+  : a.docente.nombre;
+
+const ICONO_CAT: Record<string, 'flor' | 'margarita' | 'hoja' | 'rama'> = {
+  taller: 'flor',
+  encuentro: 'margarita',
+  'club-lectura': 'hoja',
+  capacitacion: 'rama',
+  'contenido-gratuito': 'hoja',
+};
+const icono = ICONO_CAT[a.categoria] ?? 'flor';
+
+const ctaLabel = esContenido ? UI.actividad.descargar : UI.actividad.inscribirse;
+---
+<article class="card" data-categoria={a.categoria} data-destacada={a.destacada}>
+  <!-- Banda superior de color (referencia IG story) -->
+  <div class="card__banda">
+    {ig ? (
+      <div class="card__fecha-bloque">
+        <span class="card__dia">{ig.dia}</span>
+        <span class="card__diasem">{ig.diaSem}</span>
+      </div>
+      <div class="card__divider" aria-hidden="true"></div>
+      <div class="card__fecha-info">
+        {horaLabel && <span class="card__horario-badge">{horaLabel}</span>}
+        <span class="tag tag--modalidad">{labelModalidad(a.modalidad)}</span>
+      </div>
+    ) : (
+      <div class="card__sin-fecha">
+        <span class="tag tag--modalidad">{labelModalidad(a.modalidad)}</span>
+      </div>
+    )}
+    <span class="card__icono-deco" aria-hidden="true">
+      <FloralIcon variante={icono} color="currentColor" size={28} />
+    </span>
+  </div>
+
+  <!-- Cuerpo -->
+  <div class="card__body">
+    <h3 class="card__titulo">{a.nombre}</h3>
+
+    <p class="card__docente">
+      <span class="card__dicta">{UI.actividad.dicta}</span> {docenteLabel}
+    </p>
+
+    <p class="card__desc">{a.descripcion}</p>
+
+    <div class="card__pie">
+      <span class="card__precio" data-gratis={esGratis}>{precio}</span>
+
+      {cerrado ? (
+        <span class="tag tag--cerrado">{UI.actividad.sinCupos}</span>
+      ) : proximamente ? (
+        <span class="tag tag--proximamente">{UI.actividad.proximamente}</span>
+      ) : esContenido ? (
+        <a class="boton" href="#contacto">{ctaLabel}</a>
+      ) : (
+        <button
+          class="boton js-inscribirse"
+          data-id={a.id}
+          data-nombre={a.nombre}
+        >
+          {ctaLabel}
+        </button>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  /* ── Estructura ──────────────────────────────────────────────────────── */
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-cream);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-modal);
+  }
+  .card[data-destacada='true'] {
+    box-shadow: 0 0 0 2px var(--color-yellow), var(--shadow-card);
+  }
+
+  /* ── Banda superior: paleta real por tipo de propuesta ──────────────────
+     encuentro   → teal oscuro  ("el azul" de la paleta)
+     taller      → mostaza      (amarillo)
+     capacitacion→ rojo-naranja
+     contenido   → oliva verde
+  ──────────────────────────────────────────────────────────────────────── */
+  .card__banda {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    min-height: 72px;
+    color: var(--color-cream); /* texto claro por defecto */
+    position: relative;
+  }
+  /* Bandas por categoría: colores vivos, sin verde oscuro */
+  .card[data-categoria='encuentro']    .card__banda {
+    background: var(--color-secondary);   /* mint/verde claro */
+    color: var(--color-primary);
+  }
+  .card[data-categoria='taller']       .card__banda {
+    background: var(--color-yellow);      /* amarillo */
+    color: var(--color-primary);
+  }
+  .card[data-categoria='capacitacion'] .card__banda {
+    background: var(--color-red);         /* naranja-rojo */
+    color: var(--color-cream);
+  }
+  .card[data-categoria='contenido-gratuito'] .card__banda {
+    background: var(--color-olive);       /* verde oliva */
+    color: var(--color-cream);
+  }
+  .card[data-categoria='club-lectura'] .card__banda {
+    background: var(--color-green-logo);  /* verde vivo del logo */
+    color: var(--color-cream);
+  }
+
+  /* ── Fecha tipo IG ───────────────────────────────────────────────────── */
+  .card__fecha-bloque {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .card__dia {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .card__diasem {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    opacity: 0.9;
+  }
+  .card__divider {
+    width: 1px;
+    height: 40px;
+    background: currentColor;
+    opacity: 0.3;
+    flex-shrink: 0;
+  }
+  .card__fecha-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .card__horario-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: color-mix(in srgb, currentColor 15%, transparent);
+    border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    padding: 2px var(--space-3);
+    line-height: 1.6;
+  }
+  .card__sin-fecha {
+    display: flex;
+    align-items: center;
+  }
+  .card__icono-deco {
+    margin-left: auto;
+    opacity: 0.7;
+  }
+
+  /* Tags en banda: override de color base para contraste */
+  .card__banda .tag--modalidad {
+    background: color-mix(in srgb, currentColor 20%, transparent);
+    color: currentColor;
+    border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  }
+
+  /* ── Cuerpo ──────────────────────────────────────────────────────────── */
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    flex: 1;
+  }
+  .card__titulo {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text-main);
+  }
+  .card__docente {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .card__dicta {
+    font-weight: 600;
+    color: var(--text-main);
+  }
+  .card__desc {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .card__pie {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: auto;
+    padding-top: var(--space-3);
+    border-top: 1px solid color-mix(in srgb, var(--color-secondary) 25%, transparent);
+  }
+  .card__precio {
+    font-weight: 700;
+    font-size: var(--text-body-lg);
+    color: var(--color-primary);
+  }
+  .card__precio[data-gratis='true'] {
+    color: var(--color-red);
+  }
+</style>

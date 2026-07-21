@@ -1,0 +1,144 @@
+---
+// SectionContacto.astro — mapa izquierda (pequeño), divider, datos derecha.
+import type { ConfigSitio } from '../lib/types';
+
+interface Props {
+  config: ConfigSitio;
+}
+const { config } = Astro.props;
+const { lat, lng } = config.coordenadas;
+
+const mapaSrc   = config.mapaEmbed  ?? `https://maps.google.com/maps?q=${lat},${lng}&z=17&output=embed`;
+const comoLlegar = config.mapaLink  ?? `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+const igUser     = config.instagram.replace('@', '');
+---
+<section class="seccion contacto" id="contacto" aria-labelledby="contacto-titulo">
+  <div class="contenedor">
+    <p class="eyebrow">Contacto</p>
+    <h2 id="contacto-titulo" class="label-seccion">Hablemos</h2>
+
+    <div class="contacto__grid">
+
+      <!-- Izquierda: mapa pequeño -->
+      <div class="contacto__mapa">
+        <iframe
+          title="Mapa de ubicación de Medianeras — Moreno 193, Rafaela"
+          src={mapaSrc}
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+      </div>
+
+      <!-- Divider vertical -->
+      <div class="contacto__divider" aria-hidden="true"></div>
+
+      <!-- Derecha: datos -->
+      <div class="contacto__info">
+        <ul class="contacto__datos">
+          <li class="dato">
+            <span class="dato__label">visitanos</span>
+            <a class="dato__link" href={comoLlegar} rel="noopener" target="_blank">
+              {config.direccion}
+            </a>
+          </li>
+          <li class="dato">
+            <span class="dato__label">escribinos</span>
+            <a class="dato__link" href={`mailto:${config.emailContacto}`}>{config.emailContacto}</a>
+          </li>
+          {config.whatsapp && (
+            <li class="dato">
+              <span class="dato__label">whatsapp</span>
+              <a class="dato__link" href={`https://wa.me/${config.whatsapp}`} rel="noopener">Escribinos por WhatsApp</a>
+            </li>
+          )}
+          <li class="dato">
+            <span class="dato__label">seguinos</span>
+            <a class="dato__link" href={`https://instagram.com/${igUser}`} rel="noopener">{config.instagram}</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Grid: mapa | divider | info */
+  .contacto__grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1px 1.1fr;
+    gap: 0 var(--space-9);
+    margin-top: var(--space-7);
+    align-items: center;
+  }
+
+  /* ── Mapa ──────────────────────────────────────────────────────────────── */
+  .contacto__mapa {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    height: 260px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid color-mix(in srgb, var(--color-secondary) 20%, transparent);
+  }
+  .contacto__mapa iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  /* ── Divider vertical ──────────────────────────────────────────────────── */
+  .contacto__divider {
+    width: 1px;
+    align-self: stretch;
+    background: color-mix(in srgb, var(--color-secondary) 28%, transparent);
+  }
+
+  /* ── Datos ─────────────────────────────────────────────────────────────── */
+  .contacto__info {
+    display: flex;
+    flex-direction: column;
+  }
+  .contacto__datos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .dato {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .dato__label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-red);
+  }
+  .dato__link {
+    font-size: var(--text-body-lg);
+    font-weight: 600;
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .dato__link:hover {
+    color: var(--color-primary);
+  }
+
+  /* ── Responsive ────────────────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .contacto__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-7) 0;
+    }
+    .contacto__divider { display: none; }
+    .contacto__mapa    { height: 220px; }
+  }
+</style>

@@ -1,0 +1,127 @@
+---
+// ModalInscripcion.astro — <dialog> nativo. Form de inscripción vía Astro Action.
+// Estados: idle | loading | success | error (manejados por SectionOferta script).
+import { UI } from '../content/ui';
+---
+<dialog class="modal" id="modal-inscripcion" aria-labelledby="modal-titulo">
+  <form method="dialog" class="modal__cerrar-wrap">
+    <button class="modal__cerrar" value="cancel" aria-label="Cerrar">×</button>
+  </form>
+
+  <!-- Estado: formulario -->
+  <div class="modal__panel" data-estado="form">
+    <h2 id="modal-titulo" class="label-seccion">Inscripción</h2>
+
+    <form class="modal__form" id="form-inscripcion" novalidate>
+      <input type="hidden" name="actividadId" value="" />
+
+      <label class="campo">
+        <span>Nombre completo</span>
+        <input type="text" name="nombre" required minlength="2" autocomplete="name" />
+      </label>
+
+      <label class="campo">
+        <span>Email</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+
+      <label class="campo">
+        <span>Mensaje <em>(opcional)</em></span>
+        <textarea name="mensaje" rows="3"></textarea>
+      </label>
+
+      <p class="modal__error" data-error hidden></p>
+
+      <button type="submit" class="boton modal__submit">{UI.modal.submitIdle}</button>
+    </form>
+  </div>
+
+  <!-- Estado: éxito -->
+  <div class="modal__panel" data-estado="success" hidden>
+    <h2 class="label-seccion">{UI.modal.successTitle}</h2>
+    <p class="modal__success-msg">{UI.modal.successMsg}</p>
+    <button class="boton" value="ok" formmethod="dialog" id="modal-success-cerrar">Listo</button>
+  </div>
+</dialog>
+
+<style>
+  .modal {
+    width: min(92vw, 460px);
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-7);
+    background: var(--color-cream);
+    color: var(--text-main);
+    box-shadow: var(--shadow-modal);
+  }
+  .modal::backdrop {
+    background: color-mix(in srgb, var(--color-primary) 55%, transparent);
+    backdrop-filter: blur(2px);
+  }
+  .modal__cerrar-wrap {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    margin: 0;
+  }
+  .modal__cerrar {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-main);
+    border-radius: var(--radius-pill);
+  }
+  .modal__cerrar:hover {
+    background: color-mix(in srgb, var(--color-secondary) 30%, transparent);
+  }
+  .modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+  }
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .campo em {
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .campo input,
+  .campo textarea {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    padding: var(--space-3);
+    border: 2px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+    border-radius: var(--radius-md);
+    background: #fff;
+    color: var(--text-main);
+  }
+  .campo input:focus,
+  .campo textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+  .modal__error {
+    color: var(--color-red);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin: 0;
+  }
+  .modal__submit[aria-busy='true'] {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .modal__success-msg {
+    margin: var(--space-5) 0;
+    color: var(--text-muted);
+  }
+</style>
