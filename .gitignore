@@ -9,3 +9,4 @@ dist/
 graphify-out/
 .agents/
 .claude/
+.vercel
