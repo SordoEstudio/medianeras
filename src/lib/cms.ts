@@ -2,8 +2,8 @@
 // Nunca llamar a la API directamente desde componentes. Siempre vía estas funciones.
 import type { Actividad, Integrante, ConfigSitio, Testimonio } from './types';
 
-const USE_MOCK = import.meta.env.USE_MOCK === 'true';
-const CMS_URL  = import.meta.env.CMS_URL || 'http://localhost:3001';
+const CMS_URL  = import.meta.env.CMS_URL;
+const USE_MOCK = import.meta.env.USE_MOCK === 'true' || !CMS_URL;
 
 // ── Actividades ──────────────────────────────────────────────────────────────
 
