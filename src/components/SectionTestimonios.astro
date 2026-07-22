@@ -292,6 +292,13 @@ const { testimonios } = Astro.props;
     display: flex;
     flex-direction: column;
   }
+  .pila__item.es-activo .card-cita {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.10),
+      0 16px 40px rgba(0, 0, 0, 0.14);
+  }
+
   .pila__item.es-activo {
     opacity: 1;
     transform: translateY(0) !important;
@@ -302,10 +309,9 @@ const { testimonios } = Astro.props;
   .card-cita {
     background: var(--color-cream);
     border-radius: var(--radius-card);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.08),
-      0 4px 12px rgba(0, 0, 0, 0.10),
-      0 16px 40px rgba(0, 0, 0, 0.14);
+    position: relative;
+    overflow: visible;
+    box-shadow: none;
     padding: var(--space-8) var(--space-7);
     display: flex;
     flex-direction: column;
@@ -323,11 +329,14 @@ const { testimonios } = Astro.props;
 
   .card-cita__comilla {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 4.5rem;
-    line-height: 0.8;
-    color: var(--color-secondary);
-    display: block;
+    font-size: 11rem;
+    line-height: 1;
+    color: var(--color-red);
+    position: absolute;
+    top: -1.8rem;
+    left: var(--space-6);
     user-select: none;
+    pointer-events: none;
   }
 
   .card-cita__texto {
