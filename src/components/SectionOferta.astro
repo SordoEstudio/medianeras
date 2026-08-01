@@ -253,19 +253,23 @@ const FILTROS_AUD = audienciasPresentes.length > 1
   if (dropCosto) setupDrop(dropCosto, (v) => { activeCosto = v; aplicarFiltros(); });
 
   // ── Modal de inscripción ─────────────────────────────────────────────
-  const modal     = document.querySelector<HTMLDialogElement>('#modal-inscripcion');
-  const form      = document.querySelector<HTMLFormElement>('#form-inscripcion');
-  const panelForm = modal?.querySelector<HTMLElement>('[data-estado="form"]');
-  const panelSucc = modal?.querySelector<HTMLElement>('[data-estado="success"]');
-  const titulo    = document.querySelector<HTMLElement>('#modal-titulo');
-  const errorEl   = modal?.querySelector<HTMLElement>('[data-error]');
-  const submitBtn = form?.querySelector<HTMLButtonElement>('.modal__submit');
-  const idInput   = form?.querySelector<HTMLInputElement>('input[name="actividadId"]');
+  const modal        = document.querySelector<HTMLDialogElement>('#modal-inscripcion');
+  const form         = document.querySelector<HTMLFormElement>('#form-inscripcion');
+  const panelForm    = modal?.querySelector<HTMLElement>('[data-estado="form"]');
+  const panelSucc    = modal?.querySelector<HTMLElement>('[data-estado="success"]');
+  const titulo       = document.querySelector<HTMLElement>('#modal-titulo');
+  const errorEl      = modal?.querySelector<HTMLElement>('[data-error]');
+  const submitBtn    = form?.querySelector<HTMLButtonElement>('.modal__submit');
+  const idInput      = form?.querySelector<HTMLInputElement>('input[name="actividadId"]');
+  const nombreInput  = form?.querySelector<HTMLInputElement>('input[name="actividadNombre"]');
+
+  const WA_NUMBER = '5493492646942';
 
   function abrir(id: string, nombre: string) {
     if (!modal || !form) return;
     form.reset();
     idInput!.value = id;
+    nombreInput!.value = nombre;
     if (titulo) titulo.textContent = UI.modal.titulo(nombre);
     if (errorEl) errorEl.hidden = true;
     panelForm!.hidden = false;
@@ -277,19 +281,20 @@ const FILTROS_AUD = audienciasPresentes.length > 1
     btn.addEventListener('click', () => abrir(btn.dataset.id ?? '', btn.dataset.nombre ?? '')),
   );
 
-  form?.addEventListener('submit', async (e) => {
+  form?.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!form.checkValidity()) { form.reportValidity(); return; }
-    submitBtn?.setAttribute('aria-busy', 'true');
-    if (submitBtn) submitBtn.textContent = UI.modal.submitLoading;
-    if (errorEl) errorEl.hidden = true;
-    const { error } = await actions.inscribirse(new FormData(form));
-    submitBtn?.removeAttribute('aria-busy');
-    if (submitBtn) submitBtn.textContent = UI.modal.submitIdle;
-    if (error) {
-      if (errorEl) { errorEl.textContent = UI.modal.errorMsg; errorEl.hidden = false; }
-      return;
-    }
+
+    const data   = new FormData(form);
+    const nombre = data.get('nombre') as string;
+    const email  = data.get('email') as string;
+    const dni    = data.get('dni') as string;
+    const taller = data.get('actividadNombre') as string;
+
+    const msg = `Hola! Soy ${nombre} y me quiero inscribir a "${taller}". Mi email: ${email}. Mi DNI: ${dni}.`;
+    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+
+    window.open(url, '_blank', 'noopener');
     panelForm!.hidden = true;
     panelSucc!.hidden = false;
   });

@@ -10,6 +10,7 @@ import SectionOferta from '../components/SectionOferta.astro';
 import SectionContacto from '../components/SectionContacto.astro';
 import SectionTestimonios from '../components/SectionTestimonios.astro';
 import Marquee from '../components/Marquee.astro';
+import DivisorFrase from '../components/DivisorFrase.astro';
 import Footer from '../components/Footer.astro';
 import { getActividades, getEquipo, getConfig, getTestimonios } from '../lib/cms';
 import { localBusinessSchema, eventSchema } from '../lib/schema';
@@ -38,9 +39,10 @@ const jsonLd = [
   <Navbar />
   <main>
     <SectionHero />
+     <DivisorFrase /> 
     <SectionQuienes equipo={equipo} config={config} />
     <Marquee />
-    <SectionQueHacemos config={config} />
+    <SectionQueHacemos />
     <SectionOferta actividades={actividades} limite={6} conFiltros={false} />
     <SectionTestimonios testimonios={testimonios} />
     <Marquee />

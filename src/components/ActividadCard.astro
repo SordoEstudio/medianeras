@@ -38,8 +38,15 @@ const ICONO_CAT: Record<string, 'flor' | 'margarita' | 'hoja' | 'rama'> = {
 const icono = ICONO_CAT[a.categoria] ?? 'flor';
 
 const ctaLabel = esContenido ? UI.actividad.descargar : UI.actividad.inscribirse;
+
+const AUDIENCIA_MAP: Record<string, { label: string; svg: string }> = {
+  niños:   { label: 'Medianeras Kids',    svg: '/brand/svg_elements/path3261.svg' },
+  juvenil: { label: 'Medianeras Juvenil', svg: '/brand/svg_elements/path3303.svg' },
+  adultos: { label: 'Medianeras',         svg: '/brand/svg_elements/path3285.svg' },
+};
+const aud = a.audiencia ? AUDIENCIA_MAP[a.audiencia] : null;
 ---
-<article class="card" data-categoria={a.categoria} data-destacada={a.destacada}>
+<article class="card" data-categoria={a.categoria} data-audiencia={a.audiencia} data-destacada={a.destacada}>
   <!-- Banda superior de color (referencia IG story) -->
   <div class="card__banda">
     {ig ? (
@@ -50,15 +57,18 @@ const ctaLabel = esContenido ? UI.actividad.descargar : UI.actividad.inscribirse
       <div class="card__divider" aria-hidden="true"></div>
       <div class="card__fecha-info">
         {horaLabel && <span class="card__horario-badge">{horaLabel}</span>}
-        <span class="tag tag--modalidad">{labelModalidad(a.modalidad)}</span>
+        <span class="tag tag--modalidad">{aud?.label ?? labelModalidad(a.modalidad)}</span>
       </div>
     ) : (
       <div class="card__sin-fecha">
-        <span class="tag tag--modalidad">{labelModalidad(a.modalidad)}</span>
+        <span class="tag tag--modalidad">{aud?.label ?? labelModalidad(a.modalidad)}</span>
       </div>
     )}
     <span class="card__icono-deco" aria-hidden="true">
-      <FloralIcon variante={icono} color="currentColor" size={28} />
+      {aud
+        ? <img src={aud.svg} alt="" width="28" height="28" style="width:28px;height:auto;display:block" loading="lazy" />
+        : <FloralIcon variante={icono} color="currentColor" size={28} />
+      }
     </span>
   </div>
 
@@ -149,6 +159,24 @@ const ctaLabel = esContenido ? UI.actividad.descargar : UI.actividad.inscribirse
     color: var(--color-cream);
   }
 
+  /* ── Banda y botón por audiencia (override sobre categoria) ─────────── */
+  .card[data-audiencia='niños']   .card__banda { background: var(--color-cream); color: #1a1a1a; border-bottom: 4px solid var(--color-yellow); }
+  .card[data-audiencia='juvenil'] .card__banda { background: var(--color-cream); color: #1a1a1a; border-bottom: 4px solid var(--color-red); }
+  .card[data-audiencia='adultos'] .card__banda { background: var(--color-cream); color: #1a1a1a; border-bottom: 4px solid var(--color-olive); }
+
+  .card[data-audiencia='niños']   { border: 2px solid var(--color-yellow); }
+  .card[data-audiencia='juvenil'] { border: 2px solid var(--color-red); }
+  .card[data-audiencia='adultos'] { border: 2px solid var(--color-olive); }
+
+  .card[data-audiencia] .card__horario-badge,
+  .card[data-audiencia] .tag--modalidad {
+    background: transparent;
+  }
+
+  .card[data-audiencia='niños']   .boton { background: var(--color-yellow);   color: var(--color-primary); border-color: var(--color-yellow); }
+  .card[data-audiencia='juvenil'] .boton { background: var(--color-red);       color: var(--color-cream);   border-color: var(--color-red); }
+  .card[data-audiencia='adultos'] .boton { background: var(--color-olive);     color: var(--color-primary); border-color: var(--color-olive); }
+
   /* ── Fecha tipo IG ───────────────────────────────────────────────────── */
   .card__fecha-bloque {
     display: flex;
@@ -198,7 +226,17 @@ const ctaLabel = esContenido ? UI.actividad.descargar : UI.actividad.inscribirse
   }
   .card__icono-deco {
     margin-left: auto;
-    opacity: 0.7;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+  }
+  .card__icono-deco img {
+    width: 28px;
+    height: auto;
+    display: block;
   }
 
   /* Tags en banda: override de color base para contraste */

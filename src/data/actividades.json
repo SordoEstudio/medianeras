@@ -33,6 +33,7 @@
     "precio": 30000,
     "cupos": 20,
     "estado": "activo",
+    "audiencia": "adultos",
     "destacada": true,
     "publishedAt": "2026-07-15T00:00:00Z"
   },
@@ -69,6 +70,7 @@
     "precio": 25000,
     "cupos": 18,
     "estado": "activo",
+    "audiencia": "adultos",
     "destacada": false,
     "publishedAt": "2026-07-01T00:00:00Z"
   },
@@ -92,6 +94,7 @@
     "precio": 20000,
     "cupos": 15,
     "estado": "activo",
+    "audiencia": "adultos",
     "destacada": true,
     "publishedAt": "2026-07-01T00:00:00Z"
   },
@@ -110,7 +113,8 @@
     "modalidad": "presencial",
     "precio": 20000,
     "cupos": 20,
-    "estado": "activo",
+    "estado": "proximamente",
+    "audiencia": "adultos",
     "destacada": false,
     "publishedAt": "2026-07-01T00:00:00Z"
   },
@@ -129,7 +133,8 @@
     "modalidad": "presencial",
     "precio": 15000,
     "cupos": 12,
-    "estado": "proximamente",
+    "estado": "activo",
+    "audiencia": "niños",
     "destacada": false,
     "publishedAt": "2026-07-01T00:00:00Z"
   },
@@ -149,6 +154,7 @@
     "precio": 15000,
     "cupos": 15,
     "estado": "proximamente",
+    "audiencia": "juvenil",
     "destacada": false,
     "publishedAt": "2026-07-01T00:00:00Z"
   },
@@ -157,7 +163,7 @@
     "slug": "club-harry-potter",
     "nombre": "Club Harry Potter",
     "descripcion": "Para adolescentes de 11 a 15 años. Nos reunimos semanalmente para explorar el universo de Harry Potter: los libros, los personajes y todo lo que la saga tiene para decirnos sobre amistad, valentía y el mundo real.",
-    "categoria": "encuentro",
+    "categoria": "club-lectura",
     "docente": {
       "id": "int-sofia",
       "nombre": "Sofía Casabella",
@@ -172,6 +178,7 @@
     "precio": 18000,
     "cupos": 12,
     "estado": "activo",
+    "audiencia": "juvenil",
     "destacada": false,
     "publishedAt": "2026-07-01T00:00:00Z"
   }

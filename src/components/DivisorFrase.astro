@@ -1,0 +1,40 @@
+---
+---
+<div class="divisor-frase contenedor">
+  <span class="divisor-frase__linea"></span>
+  <img
+    class="divisor-frase__sello"
+    src="/brand/svg_elements/circle/amamos_leer_2.svg"
+    alt=""
+    aria-hidden="true"
+    width="72"
+    height="72"
+    loading="lazy"
+  />
+  <span class="divisor-frase__linea"></span>
+</div>
+
+<style>
+  .divisor-frase {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    padding-block: var(--space-6);
+  }
+
+  .divisor-frase__linea {
+    flex: 1;
+    height: 2px;
+    background: var(--color-yellow);
+    border-radius: 2px;
+  }
+
+  .divisor-frase__sello {
+    flex-shrink: 0;
+    animation: girar-divisor 22s linear infinite;
+  }
+
+  @keyframes girar-divisor {
+    to { transform: rotate(360deg); }
+  }
+</style>

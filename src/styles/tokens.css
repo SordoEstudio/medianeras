@@ -10,6 +10,7 @@
   --color-red:       #D94F2D;  /* rojo-naranja */
   --color-olive:     #B0B846;  /* oliva */
   --color-green-logo:#3DA56E;  /* verde del logo (línea con muesca) — asset de marca */
+  --color-celeste:   #5BB8D4;  /* celeste — Medianeras adultos */
 
   /* Semántica */
   --bg-site:         var(--color-cream);

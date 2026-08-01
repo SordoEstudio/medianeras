@@ -16,7 +16,6 @@ const { testimonios } = Astro.props;
   />
   <div class="contenedor">
     <p class="eyebrow">Lo que dicen</p>
-    <h2 id="test-titulo" class="label-seccion">La conversación sigue</h2>
 
     <div class="test-layout">
 
@@ -86,10 +85,6 @@ const { testimonios } = Astro.props;
           <div class="modal-cmt__campo">
             <label class="modal-cmt__label" for="cmt-nombre">Nombre</label>
             <input class="modal-cmt__input" id="cmt-nombre" name="nombre" type="text" placeholder="Tu nombre" required />
-          </div>
-          <div class="modal-cmt__campo">
-            <label class="modal-cmt__label" for="cmt-propuesta">Propuesta</label>
-            <input class="modal-cmt__input" id="cmt-propuesta" name="propuesta" type="text" placeholder="Ej: Club de lectura, Taller de escritura…" required />
           </div>
           <div class="modal-cmt__campo">
             <label class="modal-cmt__label" for="cmt-mensaje">Mensaje</label>
@@ -293,10 +288,7 @@ const { testimonios } = Astro.props;
     flex-direction: column;
   }
   .pila__item.es-activo .card-cita {
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.08),
-      0 4px 12px rgba(0, 0, 0, 0.10),
-      0 16px 40px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
   }
 
   .pila__item.es-activo {
@@ -312,6 +304,7 @@ const { testimonios } = Astro.props;
     position: relative;
     overflow: visible;
     box-shadow: none;
+    transition: box-shadow 0.4s ease;
     padding: var(--space-8) var(--space-7);
     display: flex;
     flex-direction: column;

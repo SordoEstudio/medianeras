@@ -5,7 +5,7 @@ export const UI = {
   nav: {
     quienes: 'Quiénes somos',
     queHacemos: 'Qué hacemos',
-    oferta: 'Propuestas',
+    oferta: 'Talleres',
     contacto: 'Contacto',
   },
   filtros: {
