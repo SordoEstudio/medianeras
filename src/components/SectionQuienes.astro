@@ -11,7 +11,6 @@ interface Props {
 const { equipo, config } = Astro.props;
 
 const sofia = equipo.find((i) => /fundador/i.test(i.rol));
-const docentes = equipo.filter((i) => !/fundador/i.test(i.rol));
 
 // Iniciales para avatar placeholder
 function iniciales(nombre: string): string {
@@ -75,44 +74,6 @@ function iniciales(nombre: string): string {
       </div>
     </div>
 
-    <!-- Equipo: Claudia y Laura -->
-    {docentes.length > 0 && (
-      <div class="quienes__docentes">
-        <p class="quienes__sub-label eyebrow">El equipo</p>
-        <ul class="quienes__equipo">
-          {docentes.map((p) => (
-            <li>
-              <div class="persona-card">
-                <img class="persona-card__sello" src="/brand/svg_elements/circle/book_lover.svg" alt="" aria-hidden="true" width="72" height="72" loading="lazy" />
-                <div class="persona">
-                  <div class="persona__header">
-                    {p.foto ? (
-                      <img
-                        class="persona__foto"
-                        src={p.foto}
-                        alt={`Foto de ${p.nombre}`}
-                        width="56"
-                        height="56"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div class="persona__avatar" aria-hidden="true">
-                        {iniciales(p.nombre)}
-                      </div>
-                    )}
-                    <div>
-                      <p class="persona__nombre">{p.nombre}</p>
-                      <p class="persona__rol">{p.rol}</p>
-                    </div>
-                  </div>
-                  <p class="persona__bio">{p.bio}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
   </div>
 </section>
 
