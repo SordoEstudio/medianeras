@@ -94,6 +94,8 @@ const aud = a.audiencia ? AUDIENCIA_MAP[a.audiencia] : null;
           data-id={a.id}
           data-nombre={a.nombre}
           data-precio={precio}
+          data-whatsapp={a.whatsapp ?? ''}
+          data-extra-fields={JSON.stringify(a.extraFields ?? [])}
         >
           {ctaLabel}
         </button>

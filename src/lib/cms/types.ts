@@ -327,6 +327,7 @@ export interface Activity {
   audiencia: string[];
   categoria?: string;
   extra_fields: ActivityExtraField[];
+  whatsapp?: string;
   inscripciones_abiertas: boolean;
   registrations_count: number;
   createdAt: string;

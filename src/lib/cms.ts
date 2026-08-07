@@ -92,6 +92,8 @@ function adaptActivity(a: Activity): Actividad {
     cupos:       a.cupo,
     estado:      a.inscripciones_abiertas ? 'activo' : 'cerrado',
     audiencia:   audienciaRaw ? AUDIENCIA_MAP[audienciaRaw] : undefined,
+    whatsapp:    a.whatsapp,
+    extraFields: a.extra_fields?.length ? a.extra_fields : undefined,
     destacada:   false,
     publishedAt: a.createdAt,
   };

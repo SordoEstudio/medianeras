@@ -253,22 +253,52 @@ const FILTROS_AUD = audienciasPresentes.length > 1
   if (dropCosto) setupDrop(dropCosto, (v) => { activeCosto = v; aplicarFiltros(); });
 
   // ── Modal de inscripción ─────────────────────────────────────────────
-  const modal        = document.querySelector<HTMLDialogElement>('#modal-inscripcion');
-  const form         = document.querySelector<HTMLFormElement>('#form-inscripcion');
-  const panelForm    = modal?.querySelector<HTMLElement>('[data-estado="form"]');
-  const panelSucc    = modal?.querySelector<HTMLElement>('[data-estado="success"]');
-  const titulo       = document.querySelector<HTMLElement>('#modal-titulo');
-  const errorEl      = modal?.querySelector<HTMLElement>('[data-error]');
-  const submitBtn    = form?.querySelector<HTMLButtonElement>('.modal__submit');
-  const idInput      = form?.querySelector<HTMLInputElement>('input[name="actividadId"]');
-  const nombreInput  = form?.querySelector<HTMLInputElement>('input[name="actividadNombre"]');
-  const precioInput  = form?.querySelector<HTMLInputElement>('input[name="actividadPrecio"]');
+  const modal         = document.querySelector<HTMLDialogElement>('#modal-inscripcion');
+  const form          = document.querySelector<HTMLFormElement>('#form-inscripcion');
+  const panelForm     = modal?.querySelector<HTMLElement>('[data-estado="form"]');
+  const panelSucc     = modal?.querySelector<HTMLElement>('[data-estado="success"]');
+  const titulo        = document.querySelector<HTMLElement>('#modal-titulo');
+  const errorEl       = modal?.querySelector<HTMLElement>('[data-error]');
+  const idInput       = form?.querySelector<HTMLInputElement>('input[name="actividadId"]');
+  const nombreInput   = form?.querySelector<HTMLInputElement>('input[name="actividadNombre"]');
+  const precioInput   = form?.querySelector<HTMLInputElement>('input[name="actividadPrecio"]');
   const precioDisplay = modal?.querySelector<HTMLElement>('[data-precio-display]');
+  const camposEl      = modal?.querySelector<HTMLElement>('#modal-campos');
+  const fallbackLink  = panelSucc?.querySelector<HTMLAnchorElement>('.modal__wa-fallback');
 
-  const WA_NUMBER = '5493492646942';
+  const WA_FALLBACK = '543492620920';
 
-  function abrir(id: string, nombre: string, precio: string) {
+  interface ExtraField { id: string; type: string; label: string; placeholder?: string; required: boolean; }
+  let currentFields: Array<{ id: string; label: string }> = [];
+  let currentWaNumber = '';
+
+  const AC: Record<string, string> = { nombre: 'name', telefono: 'tel', email: 'email' };
+
+  function escH(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function renderCampos(fields: ExtraField[]) {
+    if (!camposEl) return;
+    camposEl.innerHTML = fields.map((f) => `
+      <label class="campo">
+        <span>${escH(f.label)}${!f.required ? ' <span class="campo__opcional">(opcional)</span>' : ''}</span>
+        <input type="${f.type}" name="${escH(f.id)}" ${f.required ? 'required' : ''} ${f.placeholder ? `placeholder="${escH(f.placeholder)}"` : ''} ${f.type === 'number' ? 'inputmode="numeric"' : ''} autocomplete="${AC[f.id] ?? 'off'}" />
+      </label>`).join('');
+  }
+
+  function abrir(id: string, nombre: string, precio: string, waNumber: string, extraFieldsRaw: string) {
     if (!modal || !form) return;
+
+    const extra: ExtraField[] = JSON.parse(extraFieldsRaw || '[]');
+    const fixed: ExtraField[] = [
+      { id: 'nombre',   type: 'text', label: 'Nombre completo',     required: true },
+      { id: 'telefono', type: 'tel',  label: 'Teléfono / WhatsApp', required: true, placeholder: 'Ej: 3492 123456' },
+    ];
+    const allFields = [...fixed, ...extra];
+    currentFields   = allFields.map((f) => ({ id: f.id, label: f.label }));
+    currentWaNumber = waNumber;
+
     form.reset();
     idInput!.value = id;
     nombreInput!.value = nombre;
@@ -276,31 +306,63 @@ const FILTROS_AUD = audienciasPresentes.length > 1
     if (precioDisplay) precioDisplay.textContent = precio;
     if (titulo) titulo.textContent = UI.modal.titulo(nombre);
     if (errorEl) errorEl.hidden = true;
+
+    renderCampos(allFields);
+
+    const waNum = (waNumber || WA_FALLBACK).replace(/^\+/, '');
+    if (fallbackLink) {
+      fallbackLink.href = `https://wa.me/${waNum}`;
+      const strong = fallbackLink.querySelector('strong');
+      if (strong) strong.textContent = waNum;
+    }
+
     panelForm!.hidden = false;
     panelSucc!.hidden = true;
     modal.showModal();
   }
 
   document.querySelectorAll<HTMLButtonElement>('.js-inscribirse').forEach((btn) =>
-    btn.addEventListener('click', () => abrir(btn.dataset.id ?? '', btn.dataset.nombre ?? '', btn.dataset.precio ?? '')),
+    btn.addEventListener('click', () =>
+      abrir(
+        btn.dataset.id ?? '',
+        btn.dataset.nombre ?? '',
+        btn.dataset.precio ?? '',
+        btn.dataset.whatsapp ?? '',
+        btn.dataset.extraFields ?? '[]',
+      ),
+    ),
   );
 
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!form.checkValidity()) { form.reportValidity(); return; }
 
-    const data   = new FormData(form);
-    const nombre = data.get('nombre') as string;
-    const email  = data.get('email') as string;
-    const dni    = data.get('dni') as string;
-    const taller = data.get('actividadNombre') as string;
+    const data            = new FormData(form);
+    const actividadId     = data.get('actividadId') as string;
+    const actividadNombre = data.get('actividadNombre') as string;
 
-    const msg = `Hola! Soy ${nombre} y me quiero inscribir a "${taller}". Mi email: ${email}. Mi DNI: ${dni}.`;
-    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    const msgLines = currentFields.map((f) => `*${f.label}:* ${data.get(f.id) ?? ''}`).join('\n');
+    const msg      = `Hola! Me quiero preinscribir a *"${actividadNombre}"*.\n\n${msgLines}`;
+    const waNum    = (currentWaNumber || WA_FALLBACK).replace(/^\+/, '');
+    window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
 
-    window.open(url, '_blank', 'noopener');
     panelForm!.hidden = true;
     panelSucc!.hidden = false;
+
+    // POST al CMS — fire-and-forget, no bloquea el flujo WA
+    const apiBase    = import.meta.env.PUBLIC_CMS_API;
+    const clientSlug = import.meta.env.PUBLIC_CLIENT_SLUG;
+    if (apiBase && actividadId) {
+      const body: Record<string, string> = { _hp: '' };
+      currentFields.forEach(({ id }) => {
+        const v = data.get(id);
+        if (v != null) body[id] = v as string;
+      });
+      fetch(
+        `${apiBase}/activities/${actividadId}/register?clientSlug=${encodeURIComponent(clientSlug ?? '')}`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+      ).catch(() => {});
+    }
   });
 </script>
 
