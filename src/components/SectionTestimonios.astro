@@ -209,12 +209,32 @@ const { testimonios } = Astro.props;
     if (e.target === dialog) cerrarModal();
   });
 
-  form?.addEventListener('submit', (e) => {
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form.checkValidity()) { form.reportValidity(); return; }
-    if (panelForm)  panelForm.hidden  = true;
-    if (panelExito) panelExito.hidden = false;
-    autoClose = setTimeout(cerrarModal, 5000);
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    const submitBtn = form.querySelector<HTMLButtonElement>('[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.PUBLIC_CMS_API}/forms/testimonios/submit?clientSlug=${import.meta.env.PUBLIC_CLIENT_SLUG}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ _hp: '', ...data }),
+        }
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (panelForm)  panelForm.hidden  = true;
+      if (panelExito) panelExito.hidden = false;
+      autoClose = setTimeout(cerrarModal, 5000);
+    } catch {
+      alert('No pudimos enviar tu comentario. Intentá de nuevo.');
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
   });
 </script>
 

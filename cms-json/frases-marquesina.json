@@ -1,0 +1,16 @@
+{
+  "name": "Frases Marquesina",
+  "key": "frases_marquesina",
+  "page": "Global",
+  "type": "frases_marquesina",
+  "componentPath": "components/Marquee",
+  "data": {
+    "lista_frases": [
+      { "txt_frase": "Un lugar para hablar de libros" },
+      { "txt_frase": "Las medianeras no son límites, son fronteras compartidas" },
+      { "txt_frase": "Las medianeras no separan, sostienen lo que florece" },
+      { "txt_frase": "Los libros están para ser leídos y conversados" },
+      { "txt_frase": "Los saberes que dialogan, construyen sentido" }
+    ]
+  }
+}

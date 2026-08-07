@@ -1,0 +1,17 @@
+{
+  "name": "Quiénes Somos",
+  "key": "quienes_somos",
+  "page": "Quiénes somos",
+  "type": "quienes_somos",
+  "componentPath": "components/SectionQuienes",
+  "data": {
+    "lista_parrafos_intro": [
+      { "txt_parrafo": "Medianeras acompaña procesos de formación crítica en lectura, escritura y producción académica-cultural, desde una mirada situada, interdisciplinaria y humana. Un espacio de mediación entre saberes, disciplinas y personas, donde el conocimiento se construye en diálogo." }
+    ],
+    "lista_parrafos_historia": [
+      { "txt_parrafo": "Medianeras surge de la necesidad de hacer algo con los libros una vez que los terminamos de leer. En mis clases descubrí que hay mucha gente que necesita seguir conversando sobre los libros una vez que los termina. Y los clubes de lectura son hoy un espacio para volver a la conversación presencial: generan debates, inquietudes, preguntas, y nos hacen querer conocer otras lecturas y autores." },
+      { "txt_parrafo": "Medianeras está pensado como un espacio de diálogo, pero también de formación sobre las temáticas que giran en torno al libro. Lo que nos une no es solo el libro en sí: es la conversación que genera." }
+    ],
+    "txt_tagline": "Somos un espacio cultural de encuentros: un lugar para hablar de libros."
+  }
+}

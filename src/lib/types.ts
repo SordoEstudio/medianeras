@@ -3,6 +3,7 @@
 export type Modalidad = 'presencial' | 'virtual' | 'hibrido';
 export type Categoria = 'taller' | 'encuentro' | 'capacitacion' | 'contenido-gratuito' | 'club-lectura';
 export type EstadoActividad = 'activo' | 'proximamente' | 'cerrado';
+export type Audiencia = 'niños' | 'juvenil' | 'adultos';
 
 export interface Docente {
   id: string;
@@ -31,6 +32,7 @@ export interface Actividad {
   precio?: number;            // undefined = gratuito
   cupos?: number;             // undefined = sin límite
   estado: EstadoActividad;
+  audiencia?: Audiencia;
   imagen?: string;
   destacada: boolean;         // aparece primero en la grilla
   publishedAt: string;        // ISO 8601
@@ -49,6 +51,12 @@ export interface Integrante {
   bio: string;
   foto?: string;
   instagram?: string;
+  linkedin?: string;
+  linkedinLabel?: string;
+  charlaUrl?: string;
+  charlaLabel?: string;
+  blogUrl?: string;
+  blogLabel?: string;
 }
 
 export interface ConfigSitio {
