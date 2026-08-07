@@ -92,14 +92,19 @@ import { UI } from '../content/ui';
     gap: var(--space-3);
     margin-top: var(--space-4);
   }
-  .campo {
+  #modal-campos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  :global(.campo) {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
     font-size: var(--text-sm);
     font-weight: 600;
   }
-  .campo input {
+  :global(.campo input) {
     font-family: var(--font-sans);
     font-size: var(--text-body);
     padding: var(--space-3);
@@ -108,9 +113,13 @@ import { UI } from '../content/ui';
     background: #fff;
     color: var(--text-main);
   }
-  .campo input:focus {
+  :global(.campo input:focus) {
     outline: none;
     border-color: var(--color-primary);
+  }
+  :global(.campo__opcional) {
+    font-weight: 400;
+    color: var(--text-muted);
   }
 
   .modal__pago {
