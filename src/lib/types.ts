@@ -1,4 +1,5 @@
 // src/lib/types.ts — tipos compartidos del proyecto.
+import type { ActivityExtraField } from './cms/types';
 
 export type Modalidad = 'presencial' | 'virtual' | 'hibrido';
 export type Categoria = 'taller' | 'encuentro' | 'capacitacion' | 'contenido-gratuito' | 'club-lectura';
@@ -34,6 +35,8 @@ export interface Actividad {
   estado: EstadoActividad;
   audiencia?: Audiencia;
   imagen?: string;
+  whatsapp?: string;
+  extraFields?: ActivityExtraField[];
   destacada: boolean;         // aparece primero en la grilla
   publishedAt: string;        // ISO 8601
 }

@@ -16,20 +16,7 @@ import { UI } from '../content/ui';
       <input type="hidden" name="actividadNombre" value="" />
       <input type="hidden" name="actividadPrecio" value="" />
 
-      <label class="campo">
-        <span>Nombre completo</span>
-        <input type="text" name="nombre" required minlength="2" autocomplete="name" />
-      </label>
-
-      <label class="campo">
-        <span>Email</span>
-        <input type="email" name="email" required autocomplete="email" />
-      </label>
-
-      <label class="campo">
-        <span>DNI</span>
-        <input type="text" name="dni" required inputmode="numeric" placeholder="Ej: 38123456" />
-      </label>
+      <div id="modal-campos"></div>
 
       <div class="modal__pago">
         <p class="modal__pago-titulo">Datos de pago</p>
@@ -53,7 +40,7 @@ import { UI } from '../content/ui';
   <div class="modal__panel" data-estado="success" hidden>
     <h2 class="label-seccion">¡Casi listo!</h2>
     <p class="modal__success-msg">Tu inscripción continúa por WhatsApp. Enviá el comprobante de pago para confirmar tu lugar en el taller.</p>
-    <p class="modal__success-fallback">¿No se abrió WhatsApp? Escribinos al <a href="https://wa.me/5493492646942" target="_blank" rel="noopener"><strong>3492 646942</strong></a>.</p>
+    <p class="modal__success-fallback">¿No se abrió WhatsApp? Escribinos al <a class="modal__wa-fallback" href="https://wa.me/543492620920" target="_blank" rel="noopener"><strong>3492 620920</strong></a>.</p>
     <form method="dialog"><button class="boton" id="modal-success-cerrar">Listo</button></form>
   </div>
 </dialog>
