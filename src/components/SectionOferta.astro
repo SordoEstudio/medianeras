@@ -262,14 +262,18 @@ const FILTROS_AUD = audienciasPresentes.length > 1
   const submitBtn    = form?.querySelector<HTMLButtonElement>('.modal__submit');
   const idInput      = form?.querySelector<HTMLInputElement>('input[name="actividadId"]');
   const nombreInput  = form?.querySelector<HTMLInputElement>('input[name="actividadNombre"]');
+  const precioInput  = form?.querySelector<HTMLInputElement>('input[name="actividadPrecio"]');
+  const precioDisplay = modal?.querySelector<HTMLElement>('[data-precio-display]');
 
   const WA_NUMBER = '5493492646942';
 
-  function abrir(id: string, nombre: string) {
+  function abrir(id: string, nombre: string, precio: string) {
     if (!modal || !form) return;
     form.reset();
     idInput!.value = id;
     nombreInput!.value = nombre;
+    if (precioInput) precioInput.value = precio;
+    if (precioDisplay) precioDisplay.textContent = precio;
     if (titulo) titulo.textContent = UI.modal.titulo(nombre);
     if (errorEl) errorEl.hidden = true;
     panelForm!.hidden = false;
@@ -278,7 +282,7 @@ const FILTROS_AUD = audienciasPresentes.length > 1
   }
 
   document.querySelectorAll<HTMLButtonElement>('.js-inscribirse').forEach((btn) =>
-    btn.addEventListener('click', () => abrir(btn.dataset.id ?? '', btn.dataset.nombre ?? '')),
+    btn.addEventListener('click', () => abrir(btn.dataset.id ?? '', btn.dataset.nombre ?? '', btn.dataset.precio ?? '')),
   );
 
   form?.addEventListener('submit', (e) => {

@@ -1,0 +1,21 @@
+{
+  "name": "Hero",
+  "key": "hero",
+  "page": "Inicio",
+  "type": "hero",
+  "componentPath": "components/SectionHero",
+  "data": {
+    "txt_eyebrow": "Cultura · Literatura · Comunicación",
+    "txt_titulo": "Los libros están para ser leídos y conversados.",
+    "btn_cta_primario": {
+      "txt_label": "Próximos talleres",
+      "link_url": "#propuestas",
+      "link_tipo": "internal"
+    },
+    "btn_cta_secundario": {
+      "txt_label": "Quiénes somos",
+      "link_url": "#quienes",
+      "link_tipo": "internal"
+    }
+  }
+}

@@ -14,6 +14,7 @@ import { UI } from '../content/ui';
     <form class="modal__form" id="form-inscripcion" novalidate>
       <input type="hidden" name="actividadId" value="" />
       <input type="hidden" name="actividadNombre" value="" />
+      <input type="hidden" name="actividadPrecio" value="" />
 
       <label class="campo">
         <span>Nombre completo</span>
@@ -32,6 +33,7 @@ import { UI } from '../content/ui';
 
       <div class="modal__pago">
         <p class="modal__pago-titulo">Datos de pago</p>
+        <p class="modal__pago-fila"><span>Valor:</span><strong data-precio-display></strong></p>
         <p class="modal__pago-fila"><span>Alias:</span><strong>medianeras.lecturas</strong></p>
         <p class="modal__aviso">Compartí el comprobante de pago por WhatsApp para asegurar tu lugar en el taller.</p>
       </div>

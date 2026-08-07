@@ -1,4 +1,4 @@
-# Formulario de inicio de proyecto web — Respuestas del cliente
+mas informacion acerca de la fundadora.# Formulario de inicio de proyecto web — Respuestas del cliente
 > **Proyecto:** Sitio web Medianeras — Etapa 1
 > **Preparado por:** Harvi Digital · Harvestech S.R.L.
 > **Inicio estimado:** Julio 2026
