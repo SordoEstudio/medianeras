@@ -27,39 +27,14 @@ interface QuienesSomosData {
   txt_tagline?: string;
 }
 
-interface CMSLink {
-  url?: string;
-  label?: string;
-  [k: string]: unknown;
-}
-
 interface SofiaCardData {
   txt_nombre: string;
   txt_rol: string;
   txt_bio: string;
   img_foto_optional?: string;
-  txt_instagram_optional?: string;
-  link_linkedin_optional?: CMSLink | string;
-  link_charla_optional?: CMSLink | string;
-  link_blog_optional?: CMSLink | string;
+  lista_contacto?: CMSContactItem[];
 }
 
-function resolveLabel(v: CMSLink | string | undefined): string | undefined {
-  if (!v || typeof v === 'string') return undefined;
-  return v.label;
-}
-
-function resolveLink(v: CMSLink | string | undefined): string | undefined {
-  if (!v) return undefined;
-  if (typeof v === 'string') return v;
-  if (v.url) return v.url;
-  // CMS bug: link sin campo url — reconstruir desde índices de char
-  const chars = Object.entries(v)
-    .filter(([k]) => /^\d+$/.test(k))
-    .sort(([a], [b]) => Number(a) - Number(b))
-    .map(([, c]) => c as string);
-  return chars.length ? chars.join('') : undefined;
-}
 
 const CMS_ORIGIN = import.meta.env.PUBLIC_CMS_API?.replace('/api/public/v1', '') ?? '';
 
@@ -156,19 +131,21 @@ export async function getEquipo(): Promise<Integrante[]> {
   const { components } = await cms.components.list();
   const d = cms.components.getByType<SofiaCardData>(components, 'sofia_card');
   if (!d) return [];
+  const contactos = d.lista_contacto ?? [];
+  const cl = (icon: string) => contactos.find((c) => c.icon_contacto === icon);
   return [{
     id:        'int-sofia',
     nombre:    d.txt_nombre,
     rol:       d.txt_rol,
     bio:       d.txt_bio,
     foto:      resolveImg(d.img_foto_optional),
-    instagram: d.txt_instagram_optional,
-    linkedin:      resolveLink(d.link_linkedin_optional),
-    linkedinLabel: resolveLabel(d.link_linkedin_optional),
-    charlaUrl:     resolveLink(d.link_charla_optional),
-    charlaLabel:   resolveLabel(d.link_charla_optional),
-    blogUrl:       resolveLink(d.link_blog_optional),
-    blogLabel:     resolveLabel(d.link_blog_optional),
+    instagram: cl('FaInstagram')?.txt_valor ?? cl('FaInstagram')?.link_destino,
+    linkedin:      cl('FaLinkedin')?.link_destino,
+    linkedinLabel: cl('FaLinkedin')?.txt_label,
+    charlaUrl:     cl('FaYoutube')?.link_destino,
+    charlaLabel:   cl('FaYoutube')?.txt_label,
+    blogUrl:       cl('FaGlobe')?.link_destino,
+    blogLabel:     cl('FaGlobe')?.txt_label,
   }];
 }
 
