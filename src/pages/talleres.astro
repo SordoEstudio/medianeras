@@ -7,19 +7,19 @@ import { getActividades, getConfig } from '../lib/cms';
 
 const [actividades, config] = await Promise.all([getActividades(), getConfig()]);
 ---
-<Layout title="Todas las propuestas — medianeras · espacio cultural">
+<Layout title="Talleres y propuestas — medianeras · espacio cultural">
   <Navbar />
-  <main class="pagina-propuestas">
-    <SectionOferta actividades={actividades} conBusqueda={true} titulo="Conocé nuestras propuestas" />
+  <main class="pagina-talleres">
+    <SectionOferta actividades={actividades} conBusqueda={true} titulo="Todos los talleres" />
   </main>
   <Footer config={config} />
 </Layout>
 
 <style>
-  .pagina-propuestas {
+  .pagina-talleres {
     padding-top: 64px;
   }
-  .pagina-propuestas :global(.oferta) {
+  .pagina-talleres :global(.oferta) {
     padding-top: var(--space-7);
   }
 </style>

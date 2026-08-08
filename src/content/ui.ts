@@ -17,10 +17,10 @@ export const UI = {
     'club-lectura': 'Club de lectura',
   },
   filtrosAudiencia: {
-    todas: 'Todas las edades',
-    niños: 'Niños (3–10)',
-    juvenil: 'Juvenil (11+)',
-    adultos: 'Adultos',
+    todas: 'Todas',
+    niños: 'Medianeras Kids',
+    juvenil: 'Medianeras Juvenil',
+    adultos: 'Medianeras',
   },
   filtrosCosto: {
     todos: 'Todos',
@@ -36,7 +36,7 @@ export const UI = {
     presencial: 'Presencial',
     virtual: 'Virtual',
     hibrido: 'Híbrido',
-    dicta: 'Dicta:',
+    coordina: 'Coordina:',
   },
   modal: {
     titulo: (nombre: string) => `Inscripción — ${nombre}`,
