@@ -71,31 +71,59 @@ function resolveImg(path: string | undefined): string | undefined {
 // ── Adapters: tipos CMS Harvi → tipos locales del sitio ──────────────────────
 
 const AUDIENCIA_MAP: Record<string, Actividad['audiencia']> = {
-  niños:      'niños',
-  juvenil:    'juvenil',
-  medianeras: 'adultos',
-  adultos:    'adultos',
+  niños:                'niños',
+  kids:                 'niños',
+  'medianeras kids':    'niños',
+  juvenil:              'juvenil',
+  'medianeras juvenil': 'juvenil',
+  medianeras:           'adultos',
+  adultos:              'adultos',
 };
 
-function adaptActivity(a: Activity): Actividad {
+const CMS_CAT_SLUG: Record<string, Actividad['categoria']> = {
+  'capacitacion':        'capacitacion',
+  'taller':              'taller',
+  'taller-de-lectura':   'taller',
+  'encuentro':           'encuentro',
+  'club-de-lectura':     'club-lectura',
+  'club-lectura':        'club-lectura',
+  'contenido-gratuito':  'contenido-gratuito',
+  'spanglish-book-club': 'club-lectura',
+};
+
+function normalizeCatSlug(name: string): Actividad['categoria'] {
+  const slug = name.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  return CMS_CAT_SLUG[slug] ?? 'encuentro';
+}
+
+type CatEntry = { slug: Actividad['categoria']; nombre: string };
+
+function adaptActivity(a: Activity, catMap?: Map<string, CatEntry>): Actividad {
   const audienciaRaw = a.audiencia?.[0];
+  const cat = catMap?.get(a.categoria as string);
   return {
-    id:          a._id,
-    slug:        a._id,
-    nombre:      a.nombre,
-    descripcion: a.descripcion_corta,
-    categoria:   'encuentro',
-    docente:     { id: '', nombre: 'Sofía Casabella', bio: '' },
-    fechas:      a.fechas.map((f) => ({ fecha: f.fecha, hora: f.hora, duracion: f.duracion_min })),
-    modalidad:   a.modalidad,
-    precio:      a.precio > 0 ? a.precio : undefined,
-    cupos:       a.cupo,
-    estado:      a.inscripciones_abiertas ? 'activo' : 'cerrado',
-    audiencia:   audienciaRaw ? AUDIENCIA_MAP[audienciaRaw] : undefined,
-    whatsapp:    a.whatsapp,
-    extraFields: a.extra_fields?.length ? a.extra_fields : undefined,
-    destacada:   false,
-    publishedAt: a.createdAt,
+    id:              a._id,
+    slug:            a._id,
+    nombre:          a.nombre,
+    descripcion:     a.descripcion_corta,
+    categoria:       cat?.slug ?? 'encuentro',
+    categoriaNombre: cat?.nombre,
+    docente:         { id: '', nombre: a.coordina?.[0] ?? '', bio: '' },
+    docentes:        a.coordina?.length
+      ? a.coordina.map((n, i) => ({ id: `coord-${i}`, nombre: n, bio: '' }))
+      : undefined,
+    fechas:          a.fechas.map((f) => ({ fecha: f.fecha, hora: f.hora, duracion: f.duracion_min })),
+    modalidad:       a.modalidad,
+    precio:          a.precio > 0 ? a.precio : undefined,
+    cupos:           a.cupo,
+    estado:          a.inscripciones_abiertas ? 'activo' : 'cerrado',
+    audiencia:       audienciaRaw ? AUDIENCIA_MAP[audienciaRaw.toLowerCase()] : undefined,
+    whatsapp:        a.whatsapp,
+    extraFields:     a.extra_fields?.length ? a.extra_fields : undefined,
+    destacada:       false,
+    publishedAt:     a.createdAt,
   };
 }
 
@@ -111,8 +139,14 @@ function adaptTestimonio(t: { id: string; data: Record<string, unknown> }): Test
 
 export async function getActividades(): Promise<Actividad[]> {
   try {
-    const { activities } = await cms.activities.list({ limit: 100 });
-    return activities.map(adaptActivity);
+    const [{ activities }, categorias] = await Promise.all([
+      cms.activities.list({ limit: 100 }),
+      cms.categories.list().catch(() => [] as import('./cms/types').Category[]),
+    ]);
+    const catMap = new Map<string, CatEntry>(
+      categorias.map((c) => [c._id, { slug: normalizeCatSlug(c.name), nombre: c.name }]),
+    );
+    return activities.map((a) => adaptActivity(a, catMap));
   } catch {
     return [];
   }

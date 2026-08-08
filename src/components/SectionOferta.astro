@@ -2,6 +2,7 @@
 // SectionOferta.astro — foco comercial (R03). Filtros multi-dimensión + grilla + modal.
 import ActividadCard from './ActividadCard.astro';
 import ModalInscripcion from './ModalInscripcion.astro';
+import FloralIcon from './FloralIcon.astro';
 import { UI } from '../content/ui';
 import type { Actividad, Categoria, Audiencia } from '../lib/types';
 
@@ -28,20 +29,26 @@ const ordenadas = limite
       return b.publishedAt.localeCompare(a.publishedAt);
     });
 
-// Chips de categoría — solo las presentes
+// Chips de categoría — solo las presentes, label dinámico desde CMS
 const categoriasPresentes = [...new Set(actividades.map((a) => a.categoria))] as Categoria[];
+const catLabelMap = new Map<string, string>(
+  actividades.filter((a) => a.categoriaNombre).map((a) => [a.categoria, a.categoriaNombre!]),
+);
 const ORDEN_CAT: Categoria[] = ['taller', 'encuentro', 'club-lectura', 'capacitacion', 'contenido-gratuito'];
 const FILTROS_CAT = [
   { value: 'todas', label: UI.filtros.todas },
   ...ORDEN_CAT
     .filter((c) => categoriasPresentes.includes(c))
-    .map((c) => ({ value: c, label: UI.filtros[c] })),
+    .map((c) => ({ value: c, label: catLabelMap.get(c) ?? UI.filtros[c] })),
+  ...categoriasPresentes
+    .filter((c) => !ORDEN_CAT.includes(c as Categoria))
+    .map((c) => ({ value: c, label: catLabelMap.get(c) ?? c })),
 ];
 
 // Chips de audiencia — solo las presentes
 const audienciasPresentes = [...new Set(actividades.map((a) => a.audiencia ?? 'adultos'))] as Audiencia[];
 const ORDEN_AUD: Audiencia[] = ['niños', 'juvenil', 'adultos'];
-const FILTROS_AUD = audienciasPresentes.length > 1
+const FILTROS_AUD = audienciasPresentes.length >= 1
   ? [
       { value: 'todas', label: UI.filtrosAudiencia.todas },
       ...ORDEN_AUD
@@ -50,8 +57,14 @@ const FILTROS_AUD = audienciasPresentes.length > 1
     ]
   : [];
 
+const AUDIENCIA_ICONO: Record<string, { icono: 'flor' | 'margarita' | 'hoja'; color: string }> = {
+  niños:   { icono: 'flor',      color: 'var(--color-yellow)' },
+  juvenil: { icono: 'margarita', color: 'var(--color-red)' },
+  adultos: { icono: 'hoja',      color: 'var(--color-olive)' },
+};
+
 ---
-<section class="seccion oferta" id="propuestas" aria-labelledby="oferta-titulo">
+<section class="seccion oferta" id="talleres" aria-labelledby="oferta-titulo">
   <div class="contenedor">
     {!titulo && <p class="eyebrow">Qué ofrecemos</p>}
     <h2 id="oferta-titulo" class="label-seccion">{titulo ?? 'Propuestas'}</h2>
@@ -60,6 +73,17 @@ const FILTROS_AUD = audienciasPresentes.length > 1
       <div class="oferta__controles">
         {conFiltros && (
           <div class="oferta__filtros-barra">
+
+            <!-- Chips: Audiencia -->
+            {FILTROS_AUD.length > 0 && (
+              <div class="aud-chips" role="group" aria-label="Filtrar por audiencia">
+                {FILTROS_AUD.map((f, i) => (
+                  <button class={`aud-chip${i === 0 ? ' aud-chip--activo' : ''}`} type="button" data-aud={f.value}>
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            )}
 
             <!-- Dropdown: Categoría -->
             <div class="of-drop" data-drop="cat">
@@ -78,26 +102,6 @@ const FILTROS_AUD = audienciasPresentes.length > 1
                 ))}
               </ul>
             </div>
-
-            <!-- Dropdown: Audiencia -->
-            {FILTROS_AUD.length > 1 && (
-              <div class="of-drop" data-drop="aud">
-                <button class="of-drop__btn" type="button" aria-expanded="false" aria-haspopup="listbox">
-                  <span class="of-drop__label">Edad</span>
-                  <span class="of-drop__valor">{FILTROS_AUD[0]?.label}</span>
-                  <svg class="of-drop__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
-                    <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <ul class="of-drop__menu" role="listbox" aria-label="Edad">
-                  {FILTROS_AUD.map((f, i) => (
-                    <li class={`of-drop__op${i === 0 ? ' of-drop__op--sel' : ''}`} role="option" data-value={f.value} aria-selected={i === 0 ? 'true' : 'false'}>
-                      {f.label}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
 
             <!-- Dropdown: Costo -->
             <div class="of-drop" data-drop="costo">
@@ -150,7 +154,7 @@ const FILTROS_AUD = audienciasPresentes.length > 1
 
     {limite && (
       <div class="oferta__ver-todas">
-        <a class="boton boton--secundario" href="/propuestas">Ver todas las propuestas</a>
+        <a class="boton boton--secundario" href="/talleres">Ver todos los talleres</a>
       </div>
     )}
   </div>
@@ -245,12 +249,20 @@ const FILTROS_AUD = audienciasPresentes.length > 1
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarTodos(); });
 
   const dropCat   = document.querySelector<HTMLElement>('.of-drop[data-drop="cat"]');
-  const dropAud   = document.querySelector<HTMLElement>('.of-drop[data-drop="aud"]');
   const dropCosto = document.querySelector<HTMLElement>('.of-drop[data-drop="costo"]');
 
   if (dropCat)   setupDrop(dropCat,   (v) => { activeCat   = v; aplicarFiltros(); });
-  if (dropAud)   setupDrop(dropAud,   (v) => { activeAud   = v; aplicarFiltros(); });
   if (dropCosto) setupDrop(dropCosto, (v) => { activeCosto = v; aplicarFiltros(); });
+
+  // Chips de audiencia
+  document.querySelectorAll<HTMLButtonElement>('.aud-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll<HTMLButtonElement>('.aud-chip').forEach((c) => c.classList.remove('aud-chip--activo'));
+      chip.classList.add('aud-chip--activo');
+      activeAud = chip.dataset.aud ?? 'todas';
+      aplicarFiltros();
+    });
+  });
 
   // ── Modal de inscripción ─────────────────────────────────────────────
   const modal         = document.querySelector<HTMLDialogElement>('#modal-inscripcion');
@@ -263,6 +275,7 @@ const FILTROS_AUD = audienciasPresentes.length > 1
   const nombreInput   = form?.querySelector<HTMLInputElement>('input[name="actividadNombre"]');
   const precioInput   = form?.querySelector<HTMLInputElement>('input[name="actividadPrecio"]');
   const precioDisplay = modal?.querySelector<HTMLElement>('[data-precio-display]');
+  const pagoEl        = modal?.querySelector<HTMLElement>('.modal__pago');
   const camposEl      = modal?.querySelector<HTMLElement>('#modal-campos');
   const fallbackLink  = panelSucc?.querySelector<HTMLAnchorElement>('.modal__wa-fallback');
 
@@ -293,7 +306,7 @@ const FILTROS_AUD = audienciasPresentes.length > 1
     const extra: ExtraField[] = JSON.parse(extraFieldsRaw || '[]');
     const fixed: ExtraField[] = [
       { id: 'nombre',   type: 'text', label: 'Nombre completo',     required: true },
-      { id: 'telefono', type: 'tel',  label: 'Teléfono / WhatsApp', required: true, placeholder: 'Ej: 3492 123456' },
+      { id: 'telefono', type: 'tel',  label: 'Teléfono / WhatsApp', required: true },
     ];
     const allFields = [...fixed, ...extra];
     currentFields   = allFields.map((f) => ({ id: f.id, label: f.label }));
@@ -304,6 +317,7 @@ const FILTROS_AUD = audienciasPresentes.length > 1
     nombreInput!.value = nombre;
     if (precioInput) precioInput.value = precio;
     if (precioDisplay) precioDisplay.textContent = precio;
+    if (pagoEl) pagoEl.hidden = !precio || precio === 'Gratuito';
     if (titulo) titulo.textContent = UI.modal.titulo(nombre);
     if (errorEl) errorEl.hidden = true;
 
@@ -538,4 +552,41 @@ const FILTROS_AUD = audienciasPresentes.length > 1
     font-size: var(--text-body-lg);
     color: var(--text-muted);
   }
+
+  /* ── Chips de audiencia ──────────────────────────────────────────────── */
+  .aud-chips {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .aud-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: var(--space-2) var(--space-3);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  /* Todos los chips muestran su color (tenue) */
+  .aud-chip[data-aud="todas"]   { border-bottom-color: color-mix(in srgb, var(--color-primary) 35%, transparent); }
+  .aud-chip[data-aud="niños"]   { border-bottom-color: color-mix(in srgb, var(--color-yellow) 55%, transparent); }
+  .aud-chip[data-aud="juvenil"] { border-bottom-color: color-mix(in srgb, var(--color-red) 55%, transparent); }
+  .aud-chip[data-aud="adultos"] { border-bottom-color: color-mix(in srgb, var(--color-olive) 55%, transparent); }
+  .aud-chip:hover { color: var(--text-main); }
+  /* Activo: color pleno + texto destacado */
+  .aud-chip--activo { color: var(--text-main); }
+  .aud-chip--activo[data-aud="todas"]   { border-bottom-color: var(--color-primary); }
+  .aud-chip--activo[data-aud="niños"]   { border-bottom-color: var(--color-yellow); }
+  .aud-chip--activo[data-aud="juvenil"] { border-bottom-color: var(--color-red); }
+  .aud-chip--activo[data-aud="adultos"] { border-bottom-color: var(--color-olive); }
 </style>

@@ -35,6 +35,7 @@ export interface Actividad {
   estado: EstadoActividad;
   audiencia?: Audiencia;
   imagen?: string;
+  categoriaNombre?: string;
   whatsapp?: string;
   extraFields?: ActivityExtraField[];
   destacada: boolean;         // aparece primero en la grilla
