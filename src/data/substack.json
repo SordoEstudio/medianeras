@@ -1,0 +1,11 @@
+{
+  "txt_eyebrow": "Leemos y escribimos",
+  "txt_titulo": "Leé las historias que nacen en Medianeras",
+  "txt_lead": "¡Te invitamos a leer las historias que nacen de Medianeras!",
+  "txt_bajada": "Escribimos porque leemos: un espacio donde compartimos nuestras historias.",
+  "btn_cta": {
+    "txt_label": "Leer en Substack",
+    "link_url": "https://medianeras.substack.com",
+    "link_tipo": "external"
+  }
+}

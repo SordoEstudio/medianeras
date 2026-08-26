@@ -9,17 +9,19 @@ import SectionQueHacemos from '../components/SectionQueHacemos.astro';
 import SectionOferta from '../components/SectionOferta.astro';
 import SectionContacto from '../components/SectionContacto.astro';
 import SectionTestimonios from '../components/SectionTestimonios.astro';
+import SectionSubstack from '../components/SectionSubstack.astro';
 import Marquee from '../components/Marquee.astro';
 import DivisorFrase from '../components/DivisorFrase.astro';
 import Footer from '../components/Footer.astro';
-import { getActividades, getEquipo, getConfig, getTestimonios } from '../lib/cms';
+import { getActividades, getEquipo, getConfig, getTestimonios, getSubstack } from '../lib/cms';
 import { localBusinessSchema, eventSchema } from '../lib/schema';
 
-const [actividades, equipo, config, testimonios] = await Promise.all([
+const [actividades, equipo, config, testimonios, substack] = await Promise.all([
   getActividades(),
   getEquipo(),
   getConfig(),
   getTestimonios(),
+  getSubstack(),
 ]);
 
 const site = (Astro.site ?? Astro.url).origin;
@@ -45,6 +47,15 @@ const jsonLd = [
     <SectionQueHacemos />
     <SectionOferta actividades={actividades} limite={6} conFiltros={false} />
     <SectionTestimonios testimonios={testimonios} />
+    <DivisorFrase bg="color-mix(in srgb, var(--color-secondary) 9%, var(--color-cream))" />
+    <SectionSubstack
+      eyebrow={substack.txt_eyebrow}
+      titulo={substack.txt_titulo}
+      lead={substack.txt_lead}
+      bajada={substack.txt_bajada}
+      ctaLabel={substack.btn_cta.txt_label}
+      ctaUrl={substack.btn_cta.link_url}
+    />
     <Marquee />
     <SectionContacto config={config} />
   </main>

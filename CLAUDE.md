@@ -38,7 +38,7 @@ export const cms = createCMSClient({
 
 ## Reglas de integración
 
-- **NUNCA** usar `fetch` directo — siempre `getActividades()` / `getEquipo()` / `getConfig()` / `getTestimonios()` de `src/lib/cms.ts`.
+- **NUNCA** usar `fetch` directo — siempre `getActividades()` / `getEquipo()` / `getConfig()` / `getTestimonios()` / `getSubstack()` de `src/lib/cms.ts`.
 - **NUNCA** hacer fetch en el cliente para contenido — solo en frontmatter `.astro`.
 - Cuando `PUBLIC_CMS_API` no está configurado, las funciones sirven `src/data/*.json` directamente.
 - Formularios de inscripción: actualmente van por WhatsApp. En el futuro: `cms.activities.register()`.
@@ -56,7 +56,7 @@ export const cms = createCMSClient({
 
 | `type` en CMS | Componente Astro | `Página` CMS / `page_filter` |
 |---|---|---|
-| *(pendiente definir)* | | |
+| `substack` | `SectionSubstack.astro` | `Substack` |
 
 ## Skills de IA disponibles
 

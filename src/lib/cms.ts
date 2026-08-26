@@ -27,6 +27,14 @@ interface QuienesSomosData {
   txt_tagline?: string;
 }
 
+interface SubstackData {
+  txt_eyebrow: string;
+  txt_titulo: string;
+  txt_lead: string;
+  txt_bajada: string;
+  btn_cta: { txt_label: string; link_url: string; link_tipo?: string };
+}
+
 interface SofiaCardData {
   txt_nombre: string;
   txt_rol: string;
@@ -176,6 +184,16 @@ export async function getConfig(): Promise<ConfigSitio> {
     mapaEmbed:     c?._mapa_embed,
     mapaLink:      c?._mapa_link,
   };
+}
+
+export async function getSubstack(): Promise<SubstackData> {
+  const fallback: SubstackData = (await import('../data/substack.json')).default as SubstackData;
+  try {
+    const { components } = await cms.components.list({ page_filter: 'Substack' });
+    return cms.components.getByType<SubstackData>(components, 'substack') ?? fallback;
+  } catch {
+    return fallback;
+  }
 }
 
 export async function getTestimonios(): Promise<Testimonio[]> {
