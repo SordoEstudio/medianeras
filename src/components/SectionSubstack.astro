@@ -1,31 +1,32 @@
 ---
-// SectionSubstack.astro — Invitación al newsletter en Substack.
+// SectionSubstack.astro — Invitación al newsletter en Substack. Datos desde CMS.
+interface Props {
+  eyebrow: string;
+  titulo: string;
+  lead: string;
+  bajada: string;
+  ctaLabel: string;
+  ctaUrl: string;
+}
+const { eyebrow, titulo, lead, bajada, ctaLabel, ctaUrl } = Astro.props;
 ---
 <section class="seccion substack" aria-labelledby="substack-titulo">
   <div class="contenedor substack__inner">
-
     <div class="substack__contenido">
       <img class="substack__icono" src="/brand/substack.png" alt="Substack" width="48" height="48" loading="lazy" />
-      <p class="eyebrow">Leemos y escribimos</p>
-      <h2 id="substack-titulo" class="substack__titulo">
-        Leé las historias que nacen en Medianeras
-      </h2>
-      <p class="substack__lead">
-        ¡Te invitamos a leer las historias que nacen de Medianeras!
-      </p>
-      <p class="substack__texto">
-        Escribimos porque leemos: un espacio donde compartimos nuestras historias.
-      </p>
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 id="substack-titulo" class="substack__titulo">{titulo}</h2>
+      <p class="substack__lead">{lead}</p>
+      <p class="substack__texto">{bajada}</p>
       <a
         class="boton substack__cta"
-        href="https://medianeras.substack.com"
+        href={ctaUrl}
         target="_blank"
         rel="noopener noreferrer"
       >
-        Leer en Substack
+        {ctaLabel}
       </a>
     </div>
-
   </div>
 </section>
 
@@ -38,7 +39,6 @@
   .substack__inner {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-9);
     align-items: center;
   }
 
@@ -76,11 +76,5 @@
 
   .substack__cta {
     margin-top: var(--space-2);
-  }
-
-  @media (max-width: 640px) {
-    .substack__titulo {
-      max-width: none;
-    }
   }
 </style>
