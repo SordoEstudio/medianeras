@@ -1,20 +1,28 @@
 ---
+interface Props { bg?: string; }
+const { bg } = Astro.props;
 ---
-<div class="divisor-frase contenedor">
-  <span class="divisor-frase__linea"></span>
-  <img
-    class="divisor-frase__sello"
-    src="/brand/svg_elements/circle/amamos_leer_2.svg"
-    alt=""
-    aria-hidden="true"
-    width="72"
-    height="72"
-    loading="lazy"
-  />
-  <span class="divisor-frase__linea"></span>
+<div class="divisor-frase__wrap" style={bg ? `background:${bg}` : undefined}>
+  <div class="divisor-frase contenedor">
+    <span class="divisor-frase__linea"></span>
+    <img
+      class="divisor-frase__sello"
+      src="/brand/svg_elements/circle/amamos_leer_2.svg"
+      alt=""
+      aria-hidden="true"
+      width="72"
+      height="72"
+      loading="lazy"
+    />
+    <span class="divisor-frase__linea"></span>
+  </div>
 </div>
 
 <style>
+  .divisor-frase__wrap {
+    width: 100%;
+  }
+
   .divisor-frase {
     display: flex;
     align-items: center;

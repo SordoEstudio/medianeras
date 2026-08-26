@@ -1,0 +1,86 @@
+---
+// SectionSubstack.astro — Invitación al newsletter en Substack.
+---
+<section class="seccion substack" aria-labelledby="substack-titulo">
+  <div class="contenedor substack__inner">
+
+    <div class="substack__contenido">
+      <img class="substack__icono" src="/brand/substack.png" alt="Substack" width="48" height="48" loading="lazy" />
+      <p class="eyebrow">Leemos y escribimos</p>
+      <h2 id="substack-titulo" class="substack__titulo">
+        Leé las historias que nacen en Medianeras
+      </h2>
+      <p class="substack__lead">
+        ¡Te invitamos a leer las historias que nacen de Medianeras!
+      </p>
+      <p class="substack__texto">
+        Escribimos porque leemos: un espacio donde compartimos nuestras historias.
+      </p>
+      <a
+        class="boton substack__cta"
+        href="https://medianeras.substack.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Leer en Substack
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .substack {
+    background: color-mix(in srgb, var(--color-secondary) 9%, var(--color-cream));
+    text-align: center;
+  }
+
+  .substack__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-9);
+    align-items: center;
+  }
+
+  .substack__contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .substack__titulo {
+    font-size: var(--text-h2);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .substack__lead {
+    font-size: var(--text-body-lg);
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  .substack__texto {
+    font-size: var(--text-body-lg);
+    font-style: italic;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .substack__icono {
+    flex-shrink: 0;
+  }
+
+  .substack__cta {
+    margin-top: var(--space-2);
+  }
+
+  @media (max-width: 640px) {
+    .substack__titulo {
+      max-width: none;
+    }
+  }
+</style>

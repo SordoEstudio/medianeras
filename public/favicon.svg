@@ -1,5 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <rect width="40" height="40" rx="9" fill="#29484C"/>
-  <path d="M6 13V6h7M27 6h7v7M34 27v7h-7M13 34H6v-7" fill="none" stroke="#FBF5EC" stroke-width="2.5" stroke-linecap="round"/>
-  <text x="20" y="28" text-anchor="middle" font-family="'Public Sans',system-ui,sans-serif" font-weight="800" font-size="22" fill="#FBF5EC">m</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" fill="#0D6060"/>
+
+  <!-- Frame: left bar -->
+  <rect x="5.5" y="5.5" width="2" height="21" fill="#F2E8D9"/>
+  <!-- Frame: right bar -->
+  <rect x="24.5" y="5.5" width="2" height="21" fill="#F2E8D9"/>
+  <!-- Frame: top-left segment -->
+  <rect x="5.5" y="5.5" width="8.5" height="2" fill="#F2E8D9"/>
+  <!-- Frame: top-right segment -->
+  <rect x="18" y="5.5" width="8.5" height="2" fill="#F2E8D9"/>
+  <!-- Frame: bottom-left segment -->
+  <rect x="5.5" y="24.5" width="8.5" height="2" fill="#F2E8D9"/>
+  <!-- Frame: bottom-right segment -->
+  <rect x="18" y="24.5" width="8.5" height="2" fill="#F2E8D9"/>
+
+  <!-- Letter m -->
+  <text
+    x="16" y="21.5"
+    font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif"
+    font-size="13"
+    font-weight="700"
+    fill="#F2E8D9"
+    text-anchor="middle"
+  >m</text>
 </svg>

@@ -13,7 +13,7 @@ const FRASES = [
 
 const { frase } = Astro.props;
 const elegida = frase ?? FRASES[Math.floor(Math.random() * FRASES.length)]!;
-const sep = '  ·  ';
+const sep = ' · ';
 const linea = Array(6).fill(elegida).join(sep) + sep;
 ---
 <div class="marquee" aria-hidden="true">
