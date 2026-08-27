@@ -1,37 +1,37 @@
 ---
-// SectionQueHacemos.astro — 3 públicos: Kids, Juvenil, adultos.
+import type { Publico } from '../lib/cms';
+
+interface Props {
+  publicos: Publico[];
+}
+const { publicos } = Astro.props;
+
+const COLOR_TOKEN: Record<string, string> = {
+  'niños':   'var(--color-audiencia-kids)',
+  'juvenil': 'var(--color-audiencia-juvenil)',
+  'adultos': 'var(--color-audiencia-medianeras)',
+};
 ---
 <section class="seccion seccion--oscura que-hacemos" id="que-hacemos" aria-label="Nuestros públicos">
   <div class="contenedor">
-
     <ul class="qh__publicos">
-
-      <li class="publico" style="--underline-c: var(--color-audiencia-kids)">
-        <div class="publico__body">
-          <img class="publico__sello" src="/brand/kids-circulo-claro.png" alt="" aria-hidden="true" loading="lazy" width="120" height="120" />
-          <h3 class="publico__nombre">Medianeras Kids</h3>
-          <p class="publico__texto">El club literario para niñas y niños de 3 a 10 años, donde los libros son el inicio de grandes conversaciones. Un espacio cálido y lúdico para descubrir el placer de leer.</p>
-        </div>
-      </li>
-
-      <li class="publico" style="--underline-c: var(--color-audiencia-juvenil)">
-        <div class="publico__body">
-          <img class="publico__sello" src="/brand/juvenil-circulo-claro.png" alt="" aria-hidden="true" loading="lazy" width="120" height="120" />
-          <h3 class="publico__nombre">Medianeras Juvenil</h3>
-          <p class="publico__texto">El espacio de los que están aprendiendo a ser grandes lectores. Libros que importan, conversaciones que suman y escritura que puede salir a la luz.</p>
-        </div>
-      </li>
-
-      <li class="publico" style="--underline-c: var(--color-audiencia-medianeras)">
-        <div class="publico__body">
-          <img class="publico__sello" src="/brand/svg_elements/circle/amamos_leer_2.svg" alt="" aria-hidden="true" loading="lazy" width="120" height="120" />
-          <h3 class="publico__nombre">Medianeras</h3>
-          <p class="publico__texto">Clubes de lectura, talleres y encuentros para adultos que quieren leer, pensar y conversar con otros. Porque la literatura es una zona compartida.</p>
-        </div>
-      </li>
-
+      {publicos.map((p) => (
+        <li class="publico" style={`--underline-c: ${COLOR_TOKEN[p.audiencia] ?? 'var(--color-audiencia-medianeras)'}`}>
+          {p.foto && (
+            <div class="publico__foto-wrap">
+              <img class="publico__foto" src={p.foto} alt={p.nombre} loading="lazy" />
+            </div>
+          )}
+          {p.sello && (
+            <img class="publico__sello" src={p.sello} alt="" aria-hidden="true" loading="lazy" width="80" height="80" />
+          )}
+          <div class="publico__body">
+            <h3 class="publico__nombre">{p.nombre}</h3>
+            <p class="publico__texto">{p.descripcion}</p>
+          </div>
+        </li>
+      ))}
     </ul>
-
   </div>
 </section>
 
@@ -46,24 +46,42 @@
   }
 
   .publico {
+    position: relative;
     background: color-mix(in srgb, var(--color-cream) 8%, transparent);
     border: 1px solid color-mix(in srgb, var(--color-secondary) 30%, transparent);
     border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+
+  .publico__sello {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    z-index: 1;
+  }
+
+  .publico__foto-wrap {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .publico__foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .publico__body {
-    padding: var(--space-7) var(--space-5) var(--space-6);
+    padding: var(--space-5) var(--space-5) var(--space-6);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: var(--space-4);
-  }
-
-  .publico__sello {
-    width: 120px;
-    height: 120px;
-    flex-shrink: 0;
   }
 
   .publico__nombre {

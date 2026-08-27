@@ -13,15 +13,16 @@ import SectionSubstack from '../components/SectionSubstack.astro';
 import Marquee from '../components/Marquee.astro';
 import DivisorFrase from '../components/DivisorFrase.astro';
 import Footer from '../components/Footer.astro';
-import { getActividades, getEquipo, getConfig, getTestimonios, getSubstack } from '../lib/cms';
+import { getActividades, getEquipo, getConfig, getTestimonios, getSubstack, getQueHacemos } from '../lib/cms';
 import { localBusinessSchema, eventSchema } from '../lib/schema';
 
-const [actividades, equipo, config, testimonios, substack] = await Promise.all([
+const [actividades, equipo, config, testimonios, substack, queHacemos] = await Promise.all([
   getActividades(),
   getEquipo(),
   getConfig(),
   getTestimonios(),
   getSubstack(),
+  getQueHacemos(),
 ]);
 
 const site = (Astro.site ?? Astro.url).origin;
@@ -44,7 +45,7 @@ const jsonLd = [
      <DivisorFrase /> 
     <SectionQuienes equipo={equipo} config={config} />
     <Marquee />
-    <SectionQueHacemos />
+    <SectionQueHacemos publicos={queHacemos} />
     <SectionOferta actividades={actividades} limite={6} conFiltros={false} />
     <SectionTestimonios testimonios={testimonios} />
     <DivisorFrase bg="color-mix(in srgb, var(--color-secondary) 9%, var(--color-cream))" />

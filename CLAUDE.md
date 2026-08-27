@@ -56,7 +56,8 @@ export const cms = createCMSClient({
 
 | `type` en CMS | Componente Astro | `Página` CMS / `page_filter` |
 |---|---|---|
-| `substack` | `SectionSubstack.astro` | `Substack` |
+| `substack`    | `SectionSubstack.astro`    | `Substack`      |
+| `que_hacemos` | `SectionQueHacemos.astro`  | `Qué hacemos`   |
 
 ## Skills de IA disponibles
 

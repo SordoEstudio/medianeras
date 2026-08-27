@@ -186,6 +186,49 @@ export async function getConfig(): Promise<ConfigSitio> {
   };
 }
 
+interface QueHacemosPublicoRaw {
+  txt_nombre: string;
+  txt_descripcion: string;
+  img_foto_optional?: string;
+  img_sello?: string;
+  _audiencia: string;
+}
+
+interface QueHacemosData {
+  lista_publicos: QueHacemosPublicoRaw[];
+}
+
+export interface Publico {
+  nombre: string;
+  descripcion: string;
+  foto?: string;
+  sello?: string;
+  audiencia: string;
+}
+
+const FALLBACK_PUBLICOS: Publico[] = [
+  { nombre: 'Medianeras Kids',    audiencia: 'niños',   descripcion: 'El club literario para niñas y niños de 3 a 10 años, donde los libros son el inicio de grandes conversaciones. Un espacio cálido y lúdico para descubrir el placer de leer.',  sello: '/brand/kids-circulo-claro.png' },
+  { nombre: 'Medianeras Juvenil', audiencia: 'juvenil', descripcion: 'El espacio de los que están aprendiendo a ser grandes lectores. Libros que importan, conversaciones que suman y escritura que puede salir a la luz.', sello: '/brand/juvenil-circulo-claro.png' },
+  { nombre: 'Medianeras',         audiencia: 'adultos', descripcion: 'Clubes de lectura, talleres y encuentros para adultos que quieren leer, pensar y conversar con otros. Porque la literatura es una zona compartida.', sello: '/brand/svg_elements/circle/amamos_leer_2.svg' },
+];
+
+export async function getQueHacemos(): Promise<Publico[]> {
+  try {
+    const { components } = await cms.components.list({ page_filter: 'Qué hacemos' });
+    const d = cms.components.getByType<QueHacemosData>(components, 'que_hacemos');
+    if (!d?.lista_publicos?.length) return FALLBACK_PUBLICOS;
+    return d.lista_publicos.map((p) => ({
+      nombre:      p.txt_nombre,
+      descripcion: p.txt_descripcion,
+      foto:        resolveImg(p.img_foto_optional),
+      sello:       resolveImg(p.img_sello),
+      audiencia:   p._audiencia,
+    }));
+  } catch {
+    return FALLBACK_PUBLICOS;
+  }
+}
+
 export async function getSubstack(): Promise<SubstackData> {
   const fallback: SubstackData = (await import('../data/substack.json')).default as SubstackData;
   try {
