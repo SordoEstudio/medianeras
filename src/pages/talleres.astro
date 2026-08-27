@@ -7,9 +7,13 @@ import { getActividades, getConfig } from '../lib/cms';
 
 const [actividades, config] = await Promise.all([getActividades(), getConfig()]);
 ---
-<Layout title="Talleres y propuestas — medianeras · espacio cultural">
+<Layout
+  title="Talleres y propuestas — medianeras · espacio cultural"
+  description="Talleres de lectura, clubes literarios y encuentros culturales en Rafaela. Propuestas para niños, jóvenes y adultos en medianeras."
+>
   <Navbar />
   <main class="pagina-talleres">
+    <h1 class="sr-only">Talleres y propuestas de medianeras</h1>
     <SectionOferta actividades={actividades} conBusqueda={true} titulo="Todos los talleres" />
   </main>
   <Footer config={config} />

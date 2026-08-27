@@ -39,9 +39,9 @@ const icono = ICONO_CAT[a.categoria] ?? 'flor';
 const ctaLabel = esContenido ? UI.actividad.descargar : UI.actividad.inscribirse;
 
 const AUDIENCIA_MAP: Record<string, { label: string; svg: string }> = {
-  niños:   { label: 'Medianeras Kids',    svg: '/brand/svg_elements/path3261.svg' },
-  juvenil: { label: 'Medianeras Juvenil', svg: '/brand/svg_elements/path3303.svg' },
-  adultos: { label: 'Medianeras',         svg: '/brand/svg_elements/path3285.svg' },
+  niños:   { label: 'Medianeras Kids',    svg: '/brand/kids-circulo-claro.png' },
+  juvenil: { label: 'Medianeras Juvenil', svg: '/brand/juvenil-circulo-claro.png' },
+  adultos: { label: 'Medianeras',         svg: '/brand/svg_elements/circle/amamos_leer_2.svg' },
 };
 const aud = a.audiencia ? AUDIENCIA_MAP[a.audiencia] : null;
 ---
@@ -65,8 +65,8 @@ const aud = a.audiencia ? AUDIENCIA_MAP[a.audiencia] : null;
     )}
     <span class="card__icono-deco" aria-hidden="true">
       {aud
-        ? <img src={aud.svg} alt="" width="28" height="28" loading="lazy" />
-        : <FloralIcon variante={icono} color="currentColor" size={28} />
+        ? <img src={aud.svg} alt="" width="64" height="64" loading="lazy" />
+        : <FloralIcon variante={icono} color="currentColor" size={64} />
       }
     </span>
   </div>
@@ -142,17 +142,17 @@ const aud = a.audiencia ? AUDIENCIA_MAP[a.audiencia] : null;
   }
 
   /* Banda y borde por audiencia */
-  .card[data-audiencia='niños']   .card__banda { border-bottom-color: var(--color-yellow); }
-  .card[data-audiencia='juvenil'] .card__banda { border-bottom-color: var(--color-red); }
-  .card[data-audiencia='adultos'] .card__banda { border-bottom-color: var(--color-olive); }
+  .card[data-audiencia='niños']   .card__banda { border-bottom-color: var(--color-audiencia-kids); }
+  .card[data-audiencia='juvenil'] .card__banda { border-bottom-color: var(--color-audiencia-juvenil); }
+  .card[data-audiencia='adultos'] .card__banda { border-bottom-color: var(--color-audiencia-medianeras); }
 
-  .card[data-audiencia='niños']   { border: 2px solid var(--color-yellow); }
-  .card[data-audiencia='juvenil'] { border: 2px solid var(--color-red); }
-  .card[data-audiencia='adultos'] { border: 2px solid var(--color-olive); }
+  .card[data-audiencia='niños']   { border: 2px solid var(--color-audiencia-kids); }
+  .card[data-audiencia='juvenil'] { border: 2px solid var(--color-audiencia-juvenil); }
+  .card[data-audiencia='adultos'] { border: 2px solid var(--color-audiencia-medianeras); }
 
-  .card[data-audiencia='niños']   .boton { background: var(--color-yellow); color: var(--color-primary); border-color: var(--color-yellow); }
-  .card[data-audiencia='juvenil'] .boton { background: var(--color-red);    color: var(--color-cream);   border-color: var(--color-red); }
-  .card[data-audiencia='adultos'] .boton { background: var(--color-olive);  color: var(--color-primary); border-color: var(--color-olive); }
+  .card[data-audiencia='niños']   .boton { background: var(--color-audiencia-kids);       color: var(--color-primary); border-color: var(--color-audiencia-kids); }
+  .card[data-audiencia='juvenil'] .boton { background: var(--color-audiencia-juvenil);    color: var(--color-cream);   border-color: var(--color-audiencia-juvenil); }
+  .card[data-audiencia='adultos'] .boton { background: var(--color-audiencia-medianeras); color: var(--color-primary); border-color: var(--color-audiencia-medianeras); }
 
   /* ── Fecha tipo IG ───────────────────────────────────────────────────── */
   .card__fecha-bloque {
@@ -203,11 +203,11 @@ const aud = a.audiencia ? AUDIENCIA_MAP[a.audiencia] : null;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 64px;
+    height: 64px;
   }
   .card__icono-deco img {
-    width: 28px;
+    width: 64px;
     height: auto;
     display: block;
   }
@@ -238,9 +238,9 @@ const aud = a.audiencia ? AUDIENCIA_MAP[a.audiencia] : null;
     text-underline-offset: 5px;
     text-decoration-color: color-mix(in srgb, var(--color-secondary) 50%, transparent);
   }
-  .card[data-audiencia='niños']   .card__titulo { text-decoration-color: var(--color-yellow); }
-  .card[data-audiencia='juvenil'] .card__titulo { text-decoration-color: var(--color-red); }
-  .card[data-audiencia='adultos'] .card__titulo { text-decoration-color: var(--color-olive); }
+  .card[data-audiencia='niños']   .card__titulo { text-decoration-color: var(--color-audiencia-kids); }
+  .card[data-audiencia='juvenil'] .card__titulo { text-decoration-color: var(--color-audiencia-juvenil); }
+  .card[data-audiencia='adultos'] .card__titulo { text-decoration-color: var(--color-audiencia-medianeras); }
   .card__docente {
     font-size: var(--text-sm);
     color: var(--text-muted);

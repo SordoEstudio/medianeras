@@ -4,16 +4,7 @@ import type { Testimonio } from '../lib/types';
 interface Props { testimonios: Testimonio[]; }
 const { testimonios } = Astro.props;
 ---
-<section class="seccion testimonios" id="testimonios" aria-labelledby="test-titulo">
-  <img
-    class="testimonios__circulo"
-    src="/brand/svg_elements/circle/conocimiento.svg"
-    alt=""
-    aria-hidden="true"
-    width="130"
-    height="130"
-    loading="lazy"
-  />
+<section class="seccion testimonios" id="testimonios" aria-label="Testimonios de participantes">
   <div class="contenedor">
     <p class="eyebrow">Lo que dicen</p>
 
@@ -246,18 +237,6 @@ const { testimonios } = Astro.props;
     background: color-mix(in srgb, var(--color-secondary) 9%, var(--color-cream));
   }
   .testimonios .eyebrow { color: var(--color-primary); }
-
-  .testimonios__circulo {
-    position: absolute;
-    top: var(--space-6);
-    left: var(--space-6);
-    width: 120px;
-    height: 120px;
-    animation: girar-test 20s linear infinite;
-  }
-  @keyframes girar-test {
-    to { transform: rotate(360deg); }
-  }
 
   /* ── Layout: pila + controles ────────────────────────────────────────── */
   .test-layout {

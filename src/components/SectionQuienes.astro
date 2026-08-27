@@ -22,7 +22,7 @@ function iniciales(nombre: string): string {
     .join('');
 }
 ---
-<section class="seccion quienes" id="quienes" aria-labelledby="quienes-titulo">
+<section class="seccion quienes" id="quienes" aria-label="Quiénes somos">
   <div class="contenedor">
     <p class="eyebrow">Quiénes somos</p>
 
@@ -105,21 +105,6 @@ function iniciales(nombre: string): string {
 </section>
 
 <style>
-  /* ── Círculo decorativo: esquina superior izquierda de la sección ───────── */
-  .quienes {
-    position: relative;
-    overflow: clip;
-  }
-  .quienes__circulo {
-    position: absolute;
-    top: var(--space-6);
-    left: var(--space-6);
-    width: 120px;
-    height: 120px;
-    pointer-events: none;
-    animation: girar-sticker 22s linear infinite;
-  }
-
   /* ── Grilla principal: texto | sofía ─────────────────────────────────────── */
   .quienes__grid {
     display: grid;
@@ -146,19 +131,6 @@ function iniciales(nombre: string): string {
   }
 
   /* ── Card base: borde fino + sombra suave ───────────────────────────────── */
-  .persona-card__sello {
-    position: absolute;
-    top: var(--space-3);
-    right: var(--space-3);
-    animation: girar-sello 20s linear infinite;
-    pointer-events: none;
-    width: 72px;
-    height: 72px;
-  }
-  @keyframes girar-sello {
-    to { transform: rotate(360deg); }
-  }
-
   .persona-card {
     background: var(--color-cream);
     border: 1px solid color-mix(in srgb, var(--color-secondary) 35%, transparent);
@@ -293,10 +265,6 @@ function iniciales(nombre: string): string {
     border-color: var(--color-secondary);
   }
 
-  @keyframes girar-sticker {
-    to { transform: rotate(360deg); }
-  }
-
   /* ── Tagline como divisor con líneas decorativas ─────────────────────────── */
   .quienes__divisor-zona {
     display: flex;
@@ -326,13 +294,6 @@ function iniciales(nombre: string): string {
     line-height: 1.6;
     flex-shrink: 0;
   }
-  .quienes__divisor-circulo {
-    width: 72px;
-    height: 72px;
-    flex-shrink: 0;
-    animation: girar-sticker 22s linear infinite;
-  }
-
   /* ── Docentes (Claudia y Laura) ──────────────────────────────────────────── */
   .quienes__docentes {
     padding-top: 0;
@@ -417,10 +378,6 @@ function iniciales(nombre: string): string {
   @media (max-width: 768px) {
     .quienes__grid {
       grid-template-columns: 1fr;
-    }
-    .quienes__circulo {
-      width: 80px;
-      height: 80px;
     }
     .quienes__frase {
       font-size: var(--text-body);
