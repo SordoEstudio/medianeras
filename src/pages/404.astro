@@ -1,0 +1,65 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getConfig } from '../lib/cms';
+
+const config = await getConfig();
+---
+
+<Layout
+  title="Página no encontrada — medianeras"
+  description="Esta página no existe en nuestra biblioteca. Volvé al inicio para seguir leyendo."
+>
+  <Navbar />
+  <main class="pagina-404">
+    <div class="contenedor cuatrocientos">
+
+      <h1 class="cuatrocientos__titulo titulo-mix">
+        Parece que esta página<br /><strong>no está en el libro.</strong>
+      </h1>
+
+      <p class="cuatrocientos__texto">
+        Pero no te preocupes, porque perderse suele ser una forma de encontrar nuevos caminos. En cualquier caso, recordá que siempre podés
+      </p>
+
+      <a class="boton" href="/">volver al inicio</a>
+
+    </div>
+  </main>
+  <Footer config={config} />
+</Layout>
+
+<style>
+  .pagina-404 {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-top: 64px;
+    padding-bottom: var(--space-9);
+  }
+
+  .cuatrocientos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-5);
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .cuatrocientos__titulo {
+    font-size: var(--text-display);
+    margin: 0;
+  }
+
+  .cuatrocientos__texto {
+    font-size: var(--text-body-lg);
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 44ch;
+    margin: 0;
+  }
+
+</style>

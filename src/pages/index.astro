@@ -29,7 +29,7 @@ const jsonLd = [
   localBusinessSchema(config, site),
   ...actividades
     .filter((a) => a.estado !== 'cerrado')
-    .map((a) => eventSchema(a, site))
+    .map((a) => eventSchema(a, site, config.direccion))
     .filter((e): e is NonNullable<typeof e> => e !== null),
 ];
 ---

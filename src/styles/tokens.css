@@ -10,7 +10,11 @@
   --color-red:       #D94F2D;  /* rojo-naranja */
   --color-olive:     #B0B846;  /* oliva */
   --color-green-logo:#3DA56E;  /* verde del logo (línea con muesca) — asset de marca */
-  --color-celeste:   #5BB8D4;  /* celeste — Medianeras adultos */
+
+  /* Audiencias */
+  --color-audiencia-kids:       var(--color-yellow);   /* Medianeras Kids */
+  --color-audiencia-juvenil:    var(--color-red);      /* Medianeras Juvenil */
+  --color-audiencia-medianeras: var(--color-olive);    /* Medianeras (adultos) */
 
   /* Semántica */
   --bg-site:         var(--color-cream);
