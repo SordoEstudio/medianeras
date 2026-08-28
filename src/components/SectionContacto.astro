@@ -49,7 +49,7 @@ const igUser     = config.instagram.replace('@', '');
             <span class="dato__label">escribinos</span>
             <div class="dato__valor">
               <img src="/brand/svg_elements/path3267.svg" class="dato__svg" alt="" loading="lazy" />
-              <a class="dato__link" href={`mailto:${config.emailContacto}`}>{config.emailContacto}</a>
+              <a class="dato__link" href={`mailto:${config.emailContacto}`} target="_blank" rel="noopener">{config.emailContacto}</a>
             </div>
           </li>
           {config.whatsapp && (
@@ -57,7 +57,7 @@ const igUser     = config.instagram.replace('@', '');
               <span class="dato__label">whatsapp</span>
               <div class="dato__valor">
                 <img src="/brand/svg_elements/path3261.svg" class="dato__svg" alt="" loading="lazy" />
-                <a class="dato__link" href={`https://wa.me/${config.whatsapp}`} rel="noopener">Escribinos por WhatsApp</a>
+                <a class="dato__link" href={`https://wa.me/${config.whatsapp}`} rel="noopener" target="_blank">Escribinos por WhatsApp</a>
               </div>
             </li>
           )}
@@ -65,7 +65,7 @@ const igUser     = config.instagram.replace('@', '');
             <span class="dato__label">seguinos</span>
             <div class="dato__valor">
               <img src="/brand/svg_elements/path3285.svg" class="dato__svg" alt="" loading="lazy" />
-              <a class="dato__link" href={`https://instagram.com/${igUser}`} rel="noopener">{config.instagram}</a>
+              <a class="dato__link" href={`https://instagram.com/${igUser}`} rel="noopener" target="_blank">{config.instagram}</a>
             </div>
           </li>
         </ul>

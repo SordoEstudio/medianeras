@@ -44,17 +44,17 @@ const anio = new Date().getFullYear();
         <ul>
           <li class="pie__dato">
             <span class="pie__dato-label">escribinos</span>
-            <a href={`mailto:${config.emailContacto}`}>{config.emailContacto}</a>
+            <a href={`mailto:${config.emailContacto}`} target="_blank" rel="noopener">{config.emailContacto}</a>
           </li>
           {config.whatsapp && (
             <li class="pie__dato">
               <span class="pie__dato-label">whatsapp</span>
-              <a href={`https://wa.me/${config.whatsapp}`} rel="noopener">Escribinos</a>
+              <a href={`https://wa.me/${config.whatsapp}`} rel="noopener" target="_blank">Escribinos</a>
             </li>
           )}
           <li class="pie__dato">
             <span class="pie__dato-label">seguinos</span>
-            <a href={`https://instagram.com/${igUser}`} rel="noopener">{config.instagram}</a>
+            <a href={`https://instagram.com/${igUser}`} rel="noopener" target="_blank">{config.instagram}</a>
           </li>
         </ul>
       </div>
