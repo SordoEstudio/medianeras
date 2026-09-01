@@ -167,7 +167,8 @@ export async function getConfig(): Promise<ConfigSitio> {
   const email     = contactos.find((x) => x.icon_contacto === 'FaEnvelope')?.txt_valor ?? '';
   const waUrl     = contactos.find((x) => x.icon_contacto === 'FaWhatsapp')?.link_destino ?? '';
   const ig        = contactos.find((x) => x.icon_contacto === 'FaInstagram')?.txt_valor ?? '';
-  const direccion = contactos.find((x) => x.icon_contacto === 'FaMapMarkerAlt')?.txt_valor ?? (c as any)?.txt_direccion ?? '';
+  const mapaItem  = contactos.find((x) => x.icon_contacto === 'FaMapMarkerAlt');
+  const direccion = mapaItem?.txt_valor ?? (c as any)?.txt_direccion ?? '';
 
   const quienesSomos = (q?.lista_parrafos_intro ?? []).map((p) => p.txt_parrafo).join('\n\n');
   const historia     = (q?.lista_parrafos_historia ?? []).map((p) => p.txt_parrafo).join('\n\n');
@@ -182,7 +183,7 @@ export async function getConfig(): Promise<ConfigSitio> {
     direccion,
     coordenadas:   c?._coordenadas ?? { lat: 0, lng: 0 },
     mapaEmbed:     c?._mapa_embed,
-    mapaLink:      c?._mapa_link,
+    mapaLink:      mapaItem?.link_destino ?? c?._mapa_link,
   };
 }
 
