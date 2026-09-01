@@ -167,8 +167,10 @@ export async function getConfig(): Promise<ConfigSitio> {
   const email     = contactos.find((x) => x.icon_contacto === 'FaEnvelope')?.txt_valor ?? '';
   const waUrl     = contactos.find((x) => x.icon_contacto === 'FaWhatsapp')?.link_destino ?? '';
   const ig        = contactos.find((x) => x.icon_contacto === 'FaInstagram')?.txt_valor ?? '';
-  const mapaItem  = contactos.find((x) => x.icon_contacto === 'FaMapMarkerAlt');
-  const direccion = mapaItem?.txt_valor ?? (c as any)?.txt_direccion ?? '';
+  const mapaItem        = contactos.find((x) => x.icon_contacto === 'FaMapMarkerAlt');
+  const mapaIframeItem  = contactos.find((x) => x.icon_contacto === 'FaLink' && x.txt_label === 'mapa');
+  const direccion       = mapaItem?.txt_valor ?? (c as any)?.txt_direccion ?? '';
+  const mapaEmbedSrc    = mapaIframeItem?.link_destino?.match(/src="([^"]+)"/)?.[1];
 
   const quienesSomos = (q?.lista_parrafos_intro ?? []).map((p) => p.txt_parrafo).join('\n\n');
   const historia     = (q?.lista_parrafos_historia ?? []).map((p) => p.txt_parrafo).join('\n\n');
@@ -182,7 +184,7 @@ export async function getConfig(): Promise<ConfigSitio> {
     instagram:     ig,
     direccion,
     coordenadas:   c?._coordenadas ?? { lat: 0, lng: 0 },
-    mapaEmbed:     c?._mapa_embed,
+    mapaEmbed:     mapaEmbedSrc ?? c?._mapa_embed,
     mapaLink:      mapaItem?.link_destino ?? c?._mapa_link,
   };
 }
