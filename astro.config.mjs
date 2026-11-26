@@ -10,6 +10,8 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://medianeras.com.ar',
   output: 'server',
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: { enabled: true },
+  }),
   integrations: [sitemap()],
 });
