@@ -1,6 +1,7 @@
 ---
 // src/layouts/Layout.astro — shell del sitio. Importa tokens + fuente. SEO + JSON-LD.
 import { SEO } from 'astro-seo';
+import Analytics from '@vercel/analytics/astro';
 import '../styles/tokens.css';
 import '../styles/design-system.css';
 
@@ -56,6 +57,7 @@ const ogImageAbs = new URL(ogImage, Astro.site ?? Astro.url).href;
   </head>
   <body>
     <slot />
+    <Analytics />
   </body>
 </html>
 
